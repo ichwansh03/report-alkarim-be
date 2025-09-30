@@ -19,5 +19,3 @@ jobs:
           distribution: 'zulu'
       - name: Build with Maven
         run: mvn clean install
-      - name: Run Quarkus (dev mode, 30s)
-        run: timeout 30s ./mvnw quarkus:dev
