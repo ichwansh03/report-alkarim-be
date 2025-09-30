@@ -1,4 +1,4 @@
-package org.ichwan.entity;
+package org.ichwan.domain;
 
 import jakarta.persistence.Entity;
 
