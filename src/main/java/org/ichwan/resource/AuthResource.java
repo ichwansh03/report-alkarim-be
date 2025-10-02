@@ -11,7 +11,6 @@ import org.ichwan.domain.User;
 import org.ichwan.dto.AuthRequest;
 import org.ichwan.dto.AuthResponse;
 import org.ichwan.service.impl.UserService;
-import org.mindrot.jbcrypt.BCrypt;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -36,7 +35,7 @@ public class AuthResource {
         u.setClsroom(req.clsroom());
         u.setGender(req.gender());
         u.setRoles(req.roles());
-        u.setPassword(BCrypt.hashpw(req.password(), BCrypt.gensalt(12)));
+        u.setPassword(req.password());
 
         userService.register(u);
         return Response.status(Response.Status.CREATED).entity("user created").build();
@@ -48,7 +47,7 @@ public class AuthResource {
     public Response login(AuthRequest req) {
         User user = userService.findByEmail(req.email());
         if (user == null || !userService.authenticate(req.password(), user.getPassword())) {
-            Log.info("password hash: " + user.getPassword());
+
             return Response.status(Response.Status.UNAUTHORIZED).entity("invalid email or password").build();
         }
 

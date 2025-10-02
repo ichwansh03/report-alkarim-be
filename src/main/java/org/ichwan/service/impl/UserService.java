@@ -1,12 +1,11 @@
 package org.ichwan.service.impl;
 
-import io.quarkus.logging.Log;
+import io.quarkus.elytron.security.common.BcryptUtil;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.ichwan.domain.User;
 import org.ichwan.repository.UserRepository;
-import org.mindrot.jbcrypt.BCrypt;
 
 @ApplicationScoped
 public class UserService implements org.ichwan.service.UserService<User> {
@@ -27,7 +26,7 @@ public class UserService implements org.ichwan.service.UserService<User> {
         user.setClsroom(entity.getClsroom());
         user.setGender(entity.getGender());
         user.setRoles(entity.getRoles());
-        user.setPassword(BCrypt.hashpw(entity.getPassword(), BCrypt.gensalt(12)));
+        user.setPassword(BcryptUtil.bcryptHash(entity.getPassword()));
         userRepository.persist(user);
         return user;
     }
@@ -39,8 +38,7 @@ public class UserService implements org.ichwan.service.UserService<User> {
 
     @Override
     public boolean authenticate(String rawPassword, String passwordHash) {
-        boolean checkpw = BCrypt.checkpw(rawPassword, passwordHash);
-        Log.info(checkpw);
-        return checkpw;
+
+        return BcryptUtil.matches(rawPassword, passwordHash);
     }
 }
