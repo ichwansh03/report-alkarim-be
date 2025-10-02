@@ -1,35 +1,38 @@
 package org.ichwan.domain;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
 @Entity
-public class Student {
+@Table(name = "users")
+public class User {
 
-    private String id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    @Column(unique = true, nullable = false)
     private String name;
+    @Column(unique = true, nullable = false)
     private String email;
     private String clsroom;
     private String gender;
+    private String roles;
     private String password;
 
-    public Student() {
+    public User() {
     }
 
-    public Student(String id, String name, String email, String clsroom, String gender, String password) {
+    public User(Integer id, String name, String email, String clsroom, String gender, String roles, String password) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.clsroom = clsroom;
         this.gender = gender;
+        this.roles = roles;
         this.password = password;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -62,6 +65,14 @@ public class Student {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public String getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String roles) {
+        this.roles = roles;
     }
 
     public String getPassword() {
