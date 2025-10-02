@@ -16,13 +16,13 @@ public class UserService implements org.ichwan.service.UserService<User> {
     @Override
     @Transactional
     public User register(User entity) {
-        if (findByEmail(entity.getEmail()) != null) {
+        if (findByRegnumber(entity.getRegnumber()) != null) {
             throw new IllegalArgumentException("account already exists");
         }
 
         User user = new User();
         user.setName(entity.getName());
-        user.setEmail(entity.getEmail());
+        user.setRegnumber(entity.getRegnumber());
         user.setClsroom(entity.getClsroom());
         user.setGender(entity.getGender());
         user.setRoles(entity.getRoles());
@@ -32,8 +32,8 @@ public class UserService implements org.ichwan.service.UserService<User> {
     }
 
     @Override
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public User findByRegnumber(String regnumber) {
+        return userRepository.findByRegnumber(regnumber);
     }
 
     @Override
