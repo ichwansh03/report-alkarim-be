@@ -12,7 +12,7 @@ public class User {
     @Column(unique = true, nullable = false)
     private String name;
     @Column(unique = true, nullable = false)
-    private String email;
+    private String regnumber;
     private String clsroom;
     private String gender;
     private String roles;
@@ -21,10 +21,10 @@ public class User {
     public User() {
     }
 
-    public User(Integer id, String name, String email, String clsroom, String gender, String roles, String password) {
+    public User(Integer id, String name, String regnumber, String clsroom, String gender, String roles, String password) {
         this.id = id;
         this.name = name;
-        this.email = email;
+        this.regnumber = regnumber;
         this.clsroom = clsroom;
         this.gender = gender;
         this.roles = roles;
@@ -43,12 +43,12 @@ public class User {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
+    public String getRegnumber() {
+        return regnumber;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setRegnumber(String regnumber) {
+        this.regnumber = regnumber;
     }
 
     public String getClsroom() {
@@ -81,5 +81,18 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", regnumber='" + regnumber + '\'' +
+                ", clsroom='" + clsroom + '\'' +
+                ", gender='" + gender + '\'' +
+                ", roles='" + roles + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

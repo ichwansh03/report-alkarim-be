@@ -1,4 +1,4 @@
 package org.ichwan.dto;
 
-public record AuthResponse(String token) {
+public record AuthResponse(String regnumber, String token) {
 }
