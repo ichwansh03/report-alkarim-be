@@ -3,14 +3,13 @@ package org.ichwan.service.impl;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.ichwan.domain.Report;
-import org.ichwan.dto.ReportRequest;
 import org.ichwan.repository.ReportRepository;
 import org.ichwan.service.ReportService;
 
 import java.util.List;
 
 @ApplicationScoped
-public class ReportServiceImpl implements ReportService<Report, ReportRequest> {
+public class ReportServiceImpl implements ReportService<Report> {
 
     @Inject
     private ReportRepository repository;
@@ -31,13 +30,9 @@ public class ReportServiceImpl implements ReportService<Report, ReportRequest> {
     }
 
     @Override
-    public Report createReport(ReportRequest request) {
+    public Report createReport(Report entity) {
 
         Report report = new Report();
-        report.setCategory(request.category());
-        report.setContent(request.content());
-        report.setAction(request.action());
-
         return report;
     }
 

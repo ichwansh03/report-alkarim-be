@@ -2,7 +2,7 @@ package org.ichwan.service;
 
 import java.util.List;
 
-public interface ReportService<E, R> {
+public interface ReportService<E> {
 
     List<E> getReportsByRegnumber(String regnumber);
 
@@ -10,7 +10,7 @@ public interface ReportService<E, R> {
 
     E getReportById(Long id);
 
-    E createReport(R request);
+    E createReport(E entity);
 
     E updateReport(E entity, Long id);
 

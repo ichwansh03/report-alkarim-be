@@ -1,8 +1,8 @@
 package org.ichwan.service;
 
-public interface UserService<E, R> {
+public interface UserService<E> {
 
-    public E register(R request);
+    public E register(E entity);
 
     public E findByRegnumber(String regnumber);
 
