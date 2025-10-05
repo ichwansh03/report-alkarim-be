@@ -9,7 +9,7 @@ import jakarta.ws.rs.core.Response;
 import org.ichwan.domain.User;
 import org.ichwan.dto.AuthRequest;
 import org.ichwan.dto.AuthResponse;
-import org.ichwan.service.impl.UserService;
+import org.ichwan.service.UserService;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -18,7 +18,7 @@ import java.time.temporal.ChronoUnit;
 public class AuthResource {
 
     @Inject
-    private UserService userService;
+    private UserService<User> userService;
 
     @POST
     @Path("/register")

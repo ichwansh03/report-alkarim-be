@@ -8,7 +8,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     @Column(unique = true, nullable = false)
     private String name;
     @Column(unique = true, nullable = false)
@@ -21,17 +21,7 @@ public class User {
     public User() {
     }
 
-    public User(Integer id, String name, String regnumber, String clsroom, String gender, String roles, String password) {
-        this.id = id;
-        this.name = name;
-        this.regnumber = regnumber;
-        this.clsroom = clsroom;
-        this.gender = gender;
-        this.roles = roles;
-        this.password = password;
-    }
-
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 

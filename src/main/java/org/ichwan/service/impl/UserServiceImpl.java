@@ -8,7 +8,7 @@ import org.ichwan.domain.User;
 import org.ichwan.repository.UserRepository;
 
 @ApplicationScoped
-public class UserService implements org.ichwan.service.UserService<User> {
+public class UserServiceImpl implements org.ichwan.service.UserService<User> {
 
     @Inject
     private UserRepository userRepository;
