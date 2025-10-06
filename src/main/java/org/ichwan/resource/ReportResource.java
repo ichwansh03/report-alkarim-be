@@ -1,10 +1,7 @@
 package org.ichwan.resource;
 
 import jakarta.inject.Inject;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import org.ichwan.domain.Report;
 import org.ichwan.domain.User;
@@ -47,9 +44,9 @@ public class ReportResource {
     }
 
     @POST
-    @Path("/update")
+    @Path("/update/{id}")
     @Consumes("application/json")
-    public Response updateReport(Long id, ReportRequest request) {
+    public Response updateReport(@PathParam("id") Long id, ReportRequest request) {
         Report report = reportService.getReportById(id);
         if (report == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("report not found").build();
