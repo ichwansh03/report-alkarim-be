@@ -9,6 +9,8 @@ import org.ichwan.service.impl.ReportServiceImpl;
 import org.ichwan.service.impl.UserServiceImpl;
 
 @Path("/reports")
+@Consumes("application/json")
+@Produces("application/json")
 public class ReportResource {
 
     @Inject
@@ -18,7 +20,6 @@ public class ReportResource {
 
     @POST
     @Path("/create")
-    @Consumes("application/json")
     public Response createReport(ReportRequest request) {
         Report report = new Report();
         report.setCategory(request.category());
@@ -44,7 +45,6 @@ public class ReportResource {
 
     @PUT
     @Path("/update/{id}")
-    @Consumes("application/json")
     public Response updateReport(@PathParam("id") Long id, ReportRequest request) {
         Report report = reportService.getReportById(id);
         if (report == null) {
@@ -60,7 +60,6 @@ public class ReportResource {
 
     @DELETE
     @Path("/delete/{id}")
-    @Consumes("application/json")
     public Response deleteReport(@PathParam("id") Long id) {
         Report report = reportService.getReportById(id);
         if (report == null) {

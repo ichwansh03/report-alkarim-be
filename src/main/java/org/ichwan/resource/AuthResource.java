@@ -2,10 +2,7 @@ package org.ichwan.resource;
 
 import io.smallrye.jwt.build.Jwt;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import org.ichwan.domain.User;
 import org.ichwan.dto.AuthRequest;
@@ -16,6 +13,8 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 @Path("/auth")
+@Consumes("application/json")
+@Produces("application/json")
 public class AuthResource {
 
     @Inject
@@ -23,7 +22,6 @@ public class AuthResource {
 
     @POST
     @Path("/register")
-    @Consumes("application/json")
     public Response register(AuthRequest req) {
         if (req.regnumber() == null || req.password() == null) {
             return Response.status(Response.Status.BAD_REQUEST).entity("NISN/NIP dan password salah").build();
@@ -43,7 +41,6 @@ public class AuthResource {
 
     @PUT
     @Path("/update/{id}")
-    @Consumes("application/json")
     public Response update(Long id, AuthRequest req) {
         User u = userService.finById(id);
         if (u == null) {
@@ -60,7 +57,6 @@ public class AuthResource {
 
     @POST
     @Path("/login")
-    @Consumes("application/json")
     public Response login(AuthRequest req) {
         User user = userService.findByRegnumber(req.regnumber());
         if (user == null || !userService.authenticate(req.password(), user.getPassword())) {
