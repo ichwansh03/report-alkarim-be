@@ -9,7 +9,7 @@ import jakarta.ws.rs.core.Response;
 import org.ichwan.domain.User;
 import org.ichwan.dto.AuthRequest;
 import org.ichwan.dto.AuthResponse;
-import org.ichwan.service.UserService;
+import org.ichwan.service.impl.UserServiceImpl;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -18,14 +18,14 @@ import java.time.temporal.ChronoUnit;
 public class AuthResource {
 
     @Inject
-    private UserService<User> userService;
+    private UserServiceImpl userService;
 
     @POST
     @Path("/register")
     @Consumes("application/json")
     public Response register(AuthRequest req) {
         if (req.regnumber() == null || req.password() == null) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("email and password required").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("NISN/NIP dan password salah").build();
         }
 
         User u = new User();
@@ -38,6 +38,23 @@ public class AuthResource {
 
         userService.register(u);
         return Response.status(Response.Status.CREATED).entity("user created").build();
+    }
+
+    @POST
+    @Path("/update/{id}")
+    @Consumes("application/json")
+    public Response update(Long id, AuthRequest req) {
+        User u = userService.finById(id);
+        if (u == null) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("User tidak ditemukan").build();
+        }
+        u.setName(req.name());
+        u.setClsroom(req.clsroom());
+        u.setGender(req.gender());
+        u.setRoles(req.roles());
+        u.setPassword(req.password());
+        userService.update(u, id);
+        return Response.ok("user updated").build();
     }
 
     @POST

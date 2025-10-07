@@ -32,8 +32,32 @@ public class UserServiceImpl implements org.ichwan.service.UserService<User> {
     }
 
     @Override
+    public User update(User entity, Long id) {
+        User user = userRepository.findById(id);
+        if (user != null) {
+            user.setName(entity.getName());
+            user.setClsroom(entity.getClsroom());
+            user.setGender(entity.getGender());
+            user.setRegnumber(entity.getRegnumber());
+            user.setRoles(entity.getRoles());
+            if (entity.getPassword() != null && !entity.getPassword().isEmpty()) {
+                user.setPassword(BcryptUtil.bcryptHash(entity.getPassword()));
+            }
+            userRepository.persist(user);
+        } else {
+            throw new IllegalArgumentException("user not found");
+        }
+        return user;
+    }
+
+    @Override
     public User findByRegnumber(String regnumber) {
         return userRepository.findByRegnumber(regnumber);
+    }
+
+    @Override
+    public User finById(Long id) {
+        return userRepository.findById(id);
     }
 
     @Override

@@ -48,6 +48,9 @@ public class ReportServiceImpl implements ReportService<Report> {
     @Override
     public Report updateReport(Report entity, Long id) {
         Report report = repository.findById(id);
+        if (report == null) {
+            throw new IllegalArgumentException("report not found");
+        }
         report.setAction(entity.getAction());
         report.setMarked(entity.getMarked());
         report.setContent(entity.getContent());

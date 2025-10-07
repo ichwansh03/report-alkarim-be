@@ -4,18 +4,17 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import org.ichwan.domain.Report;
-import org.ichwan.domain.User;
 import org.ichwan.dto.ReportRequest;
-import org.ichwan.service.ReportService;
-import org.ichwan.service.UserService;
+import org.ichwan.service.impl.ReportServiceImpl;
+import org.ichwan.service.impl.UserServiceImpl;
 
 @Path("/reports")
 public class ReportResource {
 
     @Inject
-    private ReportService<Report> reportService;
+    private ReportServiceImpl reportService;
     @Inject
-    private UserService<User> userService;
+    private UserServiceImpl userService;
 
     @POST
     @Path("/create")
