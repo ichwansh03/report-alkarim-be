@@ -4,22 +4,22 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import org.ichwan.domain.Report;
-import org.ichwan.domain.User;
 import org.ichwan.dto.ReportRequest;
-import org.ichwan.service.ReportService;
-import org.ichwan.service.UserService;
+import org.ichwan.service.impl.ReportServiceImpl;
+import org.ichwan.service.impl.UserServiceImpl;
 
 @Path("/reports")
+@Consumes("application/json")
+@Produces("application/json")
 public class ReportResource {
 
     @Inject
-    private ReportService<Report> reportService;
+    private ReportServiceImpl reportService;
     @Inject
-    private UserService<User> userService;
+    private UserServiceImpl userService;
 
     @POST
     @Path("/create")
-    @Consumes("application/json")
     public Response createReport(ReportRequest request) {
         Report report = new Report();
         report.setCategory(request.category());
@@ -43,9 +43,8 @@ public class ReportResource {
         return Response.ok(reportService.getReportsByUserName(name)).build();
     }
 
-    @POST
+    @PUT
     @Path("/update/{id}")
-    @Consumes("application/json")
     public Response updateReport(@PathParam("id") Long id, ReportRequest request) {
         Report report = reportService.getReportById(id);
         if (report == null) {
@@ -59,10 +58,9 @@ public class ReportResource {
         return Response.ok("report updated").build();
     }
 
-    @POST
-    @Path("/delete")
-    @Consumes("application/json")
-    public Response deleteReport(Long id) {
+    @DELETE
+    @Path("/delete/{id}")
+    public Response deleteReport(@PathParam("id") Long id) {
         Report report = reportService.getReportById(id);
         if (report == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("report not found").build();

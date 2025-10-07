@@ -2,9 +2,13 @@ package org.ichwan.service;
 
 public interface UserService<E> {
 
-    public E register(E entity);
+    void register(E entity);
 
-    public E findByRegnumber(String regnumber);
+    void update(E entity, Long id);
 
-    public boolean authenticate(String rawPassword, String passwordHash);
+    E findByRegnumber(String regnumber);
+
+    E finById(Long id);
+
+    boolean authenticate(String rawPassword, String passwordHash);
 }

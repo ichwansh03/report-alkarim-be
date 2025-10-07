@@ -10,9 +10,9 @@ public interface ReportService<E> {
 
     E getReportById(Long id);
 
-    E createReport(E entity, String regnumber);
+    void createReport(E entity, String regnumber);
 
-    E updateReport(E entity, Long id);
+    void updateReport(E entity, Long id);
 
     void deleteReport(Long id);
 }

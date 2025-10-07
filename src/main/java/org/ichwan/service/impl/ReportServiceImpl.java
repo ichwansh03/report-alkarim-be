@@ -2,6 +2,7 @@ package org.ichwan.service.impl;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import org.ichwan.domain.Report;
 import org.ichwan.repository.ReportRepository;
 import org.ichwan.repository.UserRepository;
@@ -32,8 +33,9 @@ public class ReportServiceImpl implements ReportService<Report> {
         return repository.findById(id);
     }
 
+    @Transactional
     @Override
-    public Report createReport(Report entity, String regnumber) {
+    public void createReport(Report entity, String regnumber) {
 
         Report report = new Report();
         report.setAction(entity.getAction());
@@ -42,20 +44,23 @@ public class ReportServiceImpl implements ReportService<Report> {
         report.setMarked(entity.getMarked());
         report.setUser(userRepository.findByRegnumber(regnumber));
         repository.persist(entity);
-        return report;
     }
 
+    @Transactional
     @Override
-    public Report updateReport(Report entity, Long id) {
+    public void updateReport(Report entity, Long id) {
         Report report = repository.findById(id);
+        if (report == null) {
+            throw new IllegalArgumentException("report not found");
+        }
         report.setAction(entity.getAction());
         report.setMarked(entity.getMarked());
         report.setContent(entity.getContent());
         report.setCategory(entity.getCategory());
         repository.persist(report);
-        return report;
     }
 
+    @Transactional
     @Override
     public void deleteReport(Long id) {
         repository.deleteById(id);
