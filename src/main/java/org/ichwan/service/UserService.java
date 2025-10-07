@@ -2,9 +2,9 @@ package org.ichwan.service;
 
 public interface UserService<E> {
 
-    E register(E entity);
+    void register(E entity);
 
-    E update(E entity, Long id);
+    void update(E entity, Long id);
 
     E findByRegnumber(String regnumber);
 

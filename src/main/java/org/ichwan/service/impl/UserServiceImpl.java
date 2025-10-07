@@ -15,7 +15,7 @@ public class UserServiceImpl implements org.ichwan.service.UserService<User> {
 
     @Override
     @Transactional
-    public User register(User entity) {
+    public void register(User entity) {
         if (findByRegnumber(entity.getRegnumber()) != null) {
             throw new IllegalArgumentException("account already exists");
         }
@@ -28,11 +28,12 @@ public class UserServiceImpl implements org.ichwan.service.UserService<User> {
         user.setRoles(entity.getRoles());
         user.setPassword(BcryptUtil.bcryptHash(entity.getPassword()));
         userRepository.persist(user);
-        return user;
+
     }
 
+    @Transactional
     @Override
-    public User update(User entity, Long id) {
+    public void update(User entity, Long id) {
         User user = userRepository.findById(id);
         if (user != null) {
             user.setName(entity.getName());
@@ -47,7 +48,6 @@ public class UserServiceImpl implements org.ichwan.service.UserService<User> {
         } else {
             throw new IllegalArgumentException("user not found");
         }
-        return user;
     }
 
     @Override

@@ -4,6 +4,7 @@ import io.smallrye.jwt.build.Jwt;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
 import org.ichwan.domain.User;
@@ -40,7 +41,7 @@ public class AuthResource {
         return Response.status(Response.Status.CREATED).entity("user created").build();
     }
 
-    @POST
+    @PUT
     @Path("/update/{id}")
     @Consumes("application/json")
     public Response update(Long id, AuthRequest req) {

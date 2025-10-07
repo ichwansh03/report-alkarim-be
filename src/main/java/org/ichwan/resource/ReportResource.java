@@ -42,7 +42,7 @@ public class ReportResource {
         return Response.ok(reportService.getReportsByUserName(name)).build();
     }
 
-    @POST
+    @PUT
     @Path("/update/{id}")
     @Consumes("application/json")
     public Response updateReport(@PathParam("id") Long id, ReportRequest request) {
@@ -58,10 +58,10 @@ public class ReportResource {
         return Response.ok("report updated").build();
     }
 
-    @POST
-    @Path("/delete")
+    @DELETE
+    @Path("/delete/{id}")
     @Consumes("application/json")
-    public Response deleteReport(Long id) {
+    public Response deleteReport(@PathParam("id") Long id) {
         Report report = reportService.getReportById(id);
         if (report == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("report not found").build();
