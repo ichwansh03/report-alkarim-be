@@ -24,9 +24,9 @@ public class ReportResource {
         Report report = new Report();
         report.setCategory(request.category());
         report.setContent(request.content());
-        report.setMarked(request.marked());
+        report.setAnswer(request.answer());
         report.setUser(userService.findByRegnumber(request.regnumber()));
-        report.setAction(request.action() != null ? request.action() : false);
+        report.setScore(request.score());
         reportService.createReport(report, request.regnumber());
         return Response.status(Response.Status.CREATED).entity("report created").build();
     }
@@ -52,8 +52,8 @@ public class ReportResource {
         }
         report.setCategory(request.category());
         report.setContent(request.content());
-        report.setMarked(request.marked());
-        report.setAction(request.action() != null ? request.action() : report.getAction());
+        report.setScore(request.score());
+        report.setAnswer(request.answer());
         reportService.updateReport(report, id);
         return Response.ok("report updated").build();
     }

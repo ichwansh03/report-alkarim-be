@@ -11,8 +11,8 @@ public class Report extends Auditable{
     private Long id;
     private String category;
     private String content;
-    private Boolean action;
-    private String marked;
+    private String answer;
+    private String score;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -40,20 +40,20 @@ public class Report extends Auditable{
         this.content = content;
     }
 
-    public Boolean getAction() {
-        return action;
+    public String getAnswer() {
+        return answer;
     }
 
-    public void setAction(Boolean action) {
-        this.action = action;
+    public void setAnswer(String answer) {
+        this.answer = answer;
     }
 
-    public String getMarked() {
-        return marked;
+    public String getScore() {
+        return score;
     }
 
-    public void setMarked(String marked) {
-        this.marked = marked;
+    public void setScore(String score) {
+        this.score = score;
     }
 
     public User getUser() {
@@ -67,11 +67,10 @@ public class Report extends Auditable{
     @Override
     public String toString() {
         return "Report{" +
-                "id=" + id +
-                ", category='" + category + '\'' +
+                "category='" + category + '\'' +
                 ", content='" + content + '\'' +
-                ", action=" + action +
-                ", marked='" + marked + '\'' +
+                ", answer='" + answer + '\'' +
+                ", score='" + score + '\'' +
                 ", user=" + user +
                 '}';
     }

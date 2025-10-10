@@ -38,10 +38,10 @@ public class ReportServiceImpl implements ReportService<Report> {
     public void createReport(Report entity, String regnumber) {
 
         Report report = new Report();
-        report.setAction(entity.getAction());
+        report.setAnswer(entity.getAnswer());
         report.setCategory(entity.getCategory());
         report.setContent(entity.getContent());
-        report.setMarked(entity.getMarked());
+        report.setScore(entity.getScore());
         report.setUser(userRepository.findByRegnumber(regnumber));
         repository.persist(entity);
     }
@@ -53,8 +53,8 @@ public class ReportServiceImpl implements ReportService<Report> {
         if (report == null) {
             throw new IllegalArgumentException("report not found");
         }
-        report.setAction(entity.getAction());
-        report.setMarked(entity.getMarked());
+        report.setAnswer(entity.getAnswer());
+        report.setScore(entity.getScore());
         report.setContent(entity.getContent());
         report.setCategory(entity.getCategory());
         repository.persist(report);
