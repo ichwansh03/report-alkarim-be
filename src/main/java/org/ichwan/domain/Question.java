@@ -1,9 +1,7 @@
 package org.ichwan.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import org.ichwan.util.AnswerType;
 
 @Entity
 @Table(name = "questions")
@@ -15,7 +13,8 @@ public class Question extends Auditable{
     private String question;
     private String category;
     private String target;
-    private String options;
+    @Enumerated(EnumType.STRING)
+    private AnswerType options;
 
     public Question() {
     }
@@ -48,11 +47,11 @@ public class Question extends Auditable{
         this.target = target;
     }
 
-    public String getOptions() {
+    public AnswerType getOptions() {
         return options;
     }
 
-    public void setOptions(String options) {
+    public void setOptions(AnswerType options) {
         this.options = options;
     }
 }
