@@ -1,6 +1,7 @@
 package org.ichwan.domain;
 
 import jakarta.persistence.*;
+import org.ichwan.util.UserRole;
 
 @Entity
 @Table(name = "users")
@@ -15,7 +16,8 @@ public class User extends Auditable{
     private String regnumber;
     private String clsroom;
     private String gender;
-    private String roles;
+    @Enumerated(EnumType.STRING)
+    private UserRole roles;
     private String password;
 
     public User() {
@@ -57,11 +59,11 @@ public class User extends Auditable{
         this.gender = gender;
     }
 
-    public String getRoles() {
+    public UserRole getRoles() {
         return roles;
     }
 
-    public void setRoles(String roles) {
+    public void setRoles(UserRole roles) {
         this.roles = roles;
     }
 

@@ -67,7 +67,7 @@ public class AuthResource {
         String token = Jwt.issuer("report-alkarim-issuer")
                 .subject(String.valueOf(user.getId()))
                 .upn(user.getName())
-                .groups(user.getRoles())
+                .groups(user.getRoles().toString())
                 .expiresAt(Instant.now().plus(1, ChronoUnit.HOURS))
                 .sign();
 

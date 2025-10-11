@@ -1,4 +1,6 @@
 package org.ichwan.dto;
 
-public record AuthRequest(String name, String clsroom, String gender, String roles, String regnumber, String password) {
+import org.ichwan.util.UserRole;
+
+public record AuthRequest(String name, String clsroom, String gender, UserRole roles, String regnumber, String password) {
 }
