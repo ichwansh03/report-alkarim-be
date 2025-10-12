@@ -55,6 +55,12 @@ public class AuthResource {
         return Response.ok("user updated").build();
     }
 
+    @GET
+    @Path("/class/{class}/roles/{roles}")
+    public Response getUsersByClassAndRoles(@PathParam("class") String clsroom, @PathParam("roles") String roles) {
+        return Response.ok(userService.findByClsroomAndRoles(clsroom, roles)).build();
+    }
+
     @POST
     @Path("/login")
     public Response login(AuthRequest req) {

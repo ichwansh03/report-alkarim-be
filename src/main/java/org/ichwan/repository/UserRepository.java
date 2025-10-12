@@ -13,7 +13,7 @@ public class UserRepository implements PanacheRepository<User> {
         return find("regnumber", regnumber).firstResult();
     }
 
-    public List<User> findByClsroom(String classroom) {
-        return find("clsroom", classroom).list();
+    public List<User> findByClsroomAndRoles(String classroom, String roles) {
+        return find("clsroom = ?1 and roles = ?2", classroom, roles).list();
     }
 }
