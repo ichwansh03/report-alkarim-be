@@ -11,6 +11,8 @@ public interface QuestionService<E> {
 
     List<E> getQuestionByTarget(String target);
 
+    List<E> getQuestionByCategory(String category);
+
     void updateQuestion(E entity, Long id);
 
     void deleteQuestion(Long id);

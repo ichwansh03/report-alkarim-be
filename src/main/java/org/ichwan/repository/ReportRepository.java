@@ -17,7 +17,4 @@ public class ReportRepository implements PanacheRepository<Report> {
         return find("user.name", name).list();
     }
 
-    public List<Report> findByCategory(String category) {
-        return find("category", category).list();
-    }
 }

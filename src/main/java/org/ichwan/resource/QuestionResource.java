@@ -34,6 +34,12 @@ public class QuestionResource {
         return Response.ok(service.getQuestionByTarget(target)).build();
     }
 
+    @GET
+    @Path("/category/{category}")
+    public Response getQuestionsByCategory(@PathParam("category") String category) {
+        return Response.ok(service.getQuestionByCategory(category)).build();
+    }
+
     @PUT
     @Path("/update/{id}")
     public Response updateQuestion(@PathParam("id") Long id, QuestionRequest question) {
