@@ -9,7 +9,11 @@ import java.util.List;
 @ApplicationScoped
 public class QuestionRepository implements PanacheRepository<Question> {
 
-    public List<Question> getQuestionByTarget(String target) {
+    public List<Question> findQuestionByTarget(String target) {
         return find("target", target).list();
+    }
+
+    public List<Question> findQuestionByCategory(String category) {
+        return find("category", category).list();
     }
 }

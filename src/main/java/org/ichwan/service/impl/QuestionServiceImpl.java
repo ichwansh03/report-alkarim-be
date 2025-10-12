@@ -36,7 +36,12 @@ public class QuestionServiceImpl implements QuestionService<Question> {
 
     @Override
     public List<Question> getQuestionByTarget(String target) {
-        return repository.getQuestionByTarget(target);
+        return repository.findQuestionByTarget(target);
+    }
+
+    @Override
+    public List<Question> getQuestionByCategory(String category) {
+        return repository.findQuestionByCategory(category);
     }
 
     @Override

@@ -1,5 +1,9 @@
 package org.ichwan.service;
 
+import org.ichwan.domain.User;
+
+import java.util.List;
+
 public interface UserService<E> {
 
     void register(E entity);
@@ -9,6 +13,8 @@ public interface UserService<E> {
     E findByRegnumber(String regnumber);
 
     E finById(Long id);
+
+    List<User> findByClsroomAndRoles(String classroom, String roles);
 
     boolean authenticate(String rawPassword, String passwordHash);
 }

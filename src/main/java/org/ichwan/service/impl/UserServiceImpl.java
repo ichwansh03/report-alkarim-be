@@ -7,6 +7,8 @@ import jakarta.transaction.Transactional;
 import org.ichwan.domain.User;
 import org.ichwan.repository.UserRepository;
 
+import java.util.List;
+
 @ApplicationScoped
 public class UserServiceImpl implements org.ichwan.service.UserService<User> {
 
@@ -58,6 +60,11 @@ public class UserServiceImpl implements org.ichwan.service.UserService<User> {
     @Override
     public User finById(Long id) {
         return userRepository.findById(id);
+    }
+
+    @Override
+    public List<User> findByClsroomAndRoles(String classroom, String roles) {
+        return userRepository.findByClsroomAndRoles(classroom, roles);
     }
 
     @Override
