@@ -76,3 +76,162 @@ Create your first JPA entity
 Easily start your REST Web Services
 
 [Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+
+## API Contract
+
+### AuthResource (`/auth`)
+- **POST** `/register`  
+  Register a new user.  
+  Request body: AuthRequest (JSON):
+  ```json
+  {
+    "name": "John Doe",
+    "clsroom": "10A",
+    "gender": "male",
+    "roles": "STUDENT",
+    "regnumber": "123456",
+    "password": "yourPassword"
+  }
+  ```
+  Response: 201 Created, "user created"
+
+- **PUT** `/update/{id}`  
+  Update user by ID.  
+  Request body: AuthRequest (JSON):
+  ```json
+  {
+    "name": "John Doe",
+    "clsroom": "10A",
+    "gender": "male",
+    "roles": "STUDENT",
+    "regnumber": "123456",
+    "password": "yourPassword"
+  }
+  ```
+  Response: 200 OK, "user updated"
+
+- **GET** `/class/{class}/roles/{roles}`  
+  Get users by class and roles.  
+  Response: 200 OK, List<User>
+
+- **GET** `/user/{regnumber}`  
+  Get user by registration number.  
+  Response: 200 OK, User
+
+- **GET** `/roles/{roles}`  
+  Get users by roles.  
+  Response: 200 OK, List<User>
+
+- **POST** `/login`  
+  Authenticate user and return JWT.  
+  Request body: AuthRequest (JSON)  
+  Response: 200 OK, AuthResponse (JSON with token)
+
+---
+
+### CategoryResource (`/category`)
+- **GET** `/`  
+  Get all categories.  
+  Response: 200 OK, List<Category>
+
+- **POST** `/create`  
+  Create a new category.  
+  Request body: CategoryRequest (JSON):
+  ```json
+  {
+    "name": "Mathematics"
+  }
+  ```
+  Response: 201 Created, "Category created"
+
+- **DELETE** `/delete/{id}`  
+  Delete category by ID.  
+  Response: 200 OK, "Category deleted"
+
+---
+
+### QuestionResource (`/questions`)
+- **POST** `/create`  
+  Create a new question.  
+  Request body: QuestionRequest (JSON):
+  ```json
+  {
+    "question": "What is 2+2?",
+    "category": "Mathematics",
+    "target": "STUDENT",
+    "options": "A,B,C,D"
+  }
+  ```
+  Response: 201 Created, "Question created"
+
+- **GET** `/target/{target}`  
+  Get questions by target.  
+  Response: 200 OK, List<Question>
+
+- **GET** `/category/{category}`  
+  Get questions by category.  
+  Response: 200 OK, List<Question>
+
+- **GET** `/category/{category}/target/{target}`  
+  Get questions by category and target.  
+  Response: 200 OK, List<Question>
+
+- **PUT** `/update/{id}`  
+  Update question by ID.  
+  Request body: QuestionRequest (JSON):
+  ```json
+  {
+    "question": "What is 2+2?",
+    "category": "Mathematics",
+    "target": "STUDENT",
+    "options": "A,B,C,D"
+  }
+  ```
+  Response: 200 OK, "Question updated"
+
+- **DELETE** `/delete/{id}`  
+  Delete question by ID.  
+  Response: 200 OK, "Question deleted"
+
+---
+
+### ReportResource (`/reports`)
+- **POST** `/create`  
+  Create a new report.  
+  Request body: ReportRequest (JSON):
+  ```json
+  {
+    "category": "Mathematics",
+    "content": "Report content here",
+    "regnumber": "123456",
+    "score": "95",
+    "answer": "B"
+  }
+  ```
+  Response: 201 Created, "report created"
+
+- **GET** `/report/{regnumber}`  
+  Get reports by user registration number.  
+  Response: 200 OK, List<Report>
+
+- **GET** `/report/{name}`  
+  Get reports by user name.  
+  Response: 200 OK, List<Report>
+
+- **PUT** `/update/{id}`  
+  Update report by ID.  
+  Request body: ReportRequest (JSON):
+  ```json
+  {
+    "category": "Mathematics",
+    "content": "Report content here",
+    "regnumber": "123456",
+    "score": "95",
+    "answer": "B"
+  }
+  ```
+  Response: 200 OK, "report updated"
+
+- **DELETE** `/delete/{id}`  
+  Delete report by ID.  
+  Response: 200 OK, "report deleted"
