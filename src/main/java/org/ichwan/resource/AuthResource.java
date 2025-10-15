@@ -71,6 +71,12 @@ public class AuthResource {
         return Response.ok(user).build();
     }
 
+    @GET
+    @Path("/roles/{roles}")
+    public Response getUsersByRoles(@PathParam("roles") String roles) {
+        return Response.ok(userService.findByRoles(roles)).build();
+    }
+
     @POST
     @Path("/login")
     public Response login(AuthRequest req) {

@@ -45,6 +45,11 @@ public class QuestionServiceImpl implements QuestionService<Question> {
     }
 
     @Override
+    public List<Question> getQuestionByCategoryAndTarget(String category, String target) {
+        return repository.findQuestionByCategoryAndTarget(category, target);
+    }
+
+    @Override
     public void updateQuestion(Question entity, Long id) {
         Question question = repository.findById(id);
         if (question == null) {

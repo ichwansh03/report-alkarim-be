@@ -13,6 +13,8 @@ public interface QuestionService<E> {
 
     List<E> getQuestionByCategory(String category);
 
+    List<E> getQuestionByCategoryAndTarget(String category, String target);
+
     void updateQuestion(E entity, Long id);
 
     void deleteQuestion(Long id);

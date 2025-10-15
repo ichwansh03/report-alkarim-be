@@ -16,5 +16,7 @@ public interface UserService<E> {
 
     List<User> findByClsroomAndRoles(String classroom, String roles);
 
+    List<User> findByRoles(String roles);
+
     boolean authenticate(String rawPassword, String passwordHash);
 }
