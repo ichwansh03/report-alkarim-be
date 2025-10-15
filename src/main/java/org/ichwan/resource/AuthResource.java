@@ -61,6 +61,22 @@ public class AuthResource {
         return Response.ok(userService.findByClsroomAndRoles(clsroom, roles)).build();
     }
 
+    @GET
+    @Path("/user/{regnumber}")
+    public Response getUserByRegnumber(@PathParam("regnumber") String regnumber) {
+        User user = userService.findByRegnumber(regnumber);
+        if (user == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("User not found").build();
+        }
+        return Response.ok(user).build();
+    }
+
+    @GET
+    @Path("/roles/{roles}")
+    public Response getUsersByRoles(@PathParam("roles") String roles) {
+        return Response.ok(userService.findByRoles(roles)).build();
+    }
+
     @POST
     @Path("/login")
     public Response login(AuthRequest req) {

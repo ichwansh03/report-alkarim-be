@@ -68,6 +68,11 @@ public class UserServiceImpl implements org.ichwan.service.UserService<User> {
     }
 
     @Override
+    public List<User> findByRoles(String roles) {
+        return userRepository.findByRoles(roles);
+    }
+
+    @Override
     public boolean authenticate(String rawPassword, String passwordHash) {
 
         return BcryptUtil.matches(rawPassword, passwordHash);

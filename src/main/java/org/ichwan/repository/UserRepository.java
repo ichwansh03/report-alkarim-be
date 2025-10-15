@@ -16,4 +16,8 @@ public class UserRepository implements PanacheRepository<User> {
     public List<User> findByClsroomAndRoles(String classroom, String roles) {
         return find("clsroom = ?1 and roles = ?2", classroom, roles).list();
     }
+
+    public List<User> findByRoles(String roles) {
+        return find("roles", roles).list();
+    }
 }

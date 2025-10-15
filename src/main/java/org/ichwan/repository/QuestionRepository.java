@@ -16,4 +16,8 @@ public class QuestionRepository implements PanacheRepository<Question> {
     public List<Question> findQuestionByCategory(String category) {
         return find("category", category).list();
     }
+
+    public List<Question> findQuestionByCategoryAndTarget(String category, String target) {
+        return find("category = ?1 and target = ?2", category, target).list();
+    }
 }
