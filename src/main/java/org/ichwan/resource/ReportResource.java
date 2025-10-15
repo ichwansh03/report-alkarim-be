@@ -32,13 +32,13 @@ public class ReportResource {
     }
 
     @GET
-    @Path("/report/{regnumber}")
+    @Path("/regnumber/{regnumber}")
     public Response getReportsByRegnumber(String regnumber) {
         return Response.ok(reportService.getReportsByRegnumber(regnumber)).build();
     }
 
     @GET
-    @Path("/report/{name}")
+    @Path("/name/{name}")
     public Response getReportsByUserName(String name) {
         return Response.ok(reportService.getReportsByUserName(name)).build();
     }
