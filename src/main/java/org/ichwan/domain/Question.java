@@ -19,6 +19,10 @@ public class Question extends Auditable{
     public Question() {
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }
