@@ -13,7 +13,7 @@ import java.sql.Statement;
 
 public class AuthRegisterSimulation extends Simulation {
 
-    private static final String BASE_URL = "http://host.docker.internal:8080";
+    private static final String BASE_URL = "http://localhost:8080";
 
     private static final FeederBuilder.Batchable<String> feeder = csv("auth_users.csv").circular();
 
@@ -49,9 +49,9 @@ public class AuthRegisterSimulation extends Simulation {
         String password = "12345";
         try (Connection conn = DriverManager.getConnection(url, user, password);
              Statement stmt = conn.createStatement()) {
-            // Example: Clean up users table before test
+
             stmt.executeUpdate("DELETE FROM users");
-            // Example: Check user count
+
             ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM users");
             if (rs.next()) {
                 System.out.println("User count before test: " + rs.getInt(1));
@@ -61,3 +61,4 @@ public class AuthRegisterSimulation extends Simulation {
         }
     }
 }
+
