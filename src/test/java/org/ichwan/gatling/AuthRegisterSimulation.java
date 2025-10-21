@@ -10,35 +10,52 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class AuthRegisterSimulation extends Simulation {
 
-    private static final String BASE_URL = "http://host.docker.internal:8080";
-
-    private static final FeederBuilder.Batchable<String> feeder = csv("auth_users.csv").circular();
+    private static final String BASE_URL = "http://localhost:8080";
 
     private static final HttpProtocolBuilder httpProtocol = http
             .baseUrl(BASE_URL)
             .acceptHeader("application/json")
             .contentTypeHeader("application/json");
 
-    private static final ScenarioBuilder scn = scenario("Register Users")
-            .feed(feeder)
-            .exec(
+    private static String jsonRepeated() {
+        int id = ThreadLocalRandom.current().nextInt(10000, 99999);
+        return String.format(
+                "{\"name\":\"User%d\",\"regnumber\":\"reg%d\",\"clsroom\":\"A\",\"gender\":\"M\",\"roles\":\"STUDENT\",\"password\":\"pass%d\"}",
+                id, id, id
+        );
+    }
+
+    private static final ScenarioBuilder registerUser = scenario("Register Users")
+            .repeat(50).on(exec(
                 http("Register User")
                     .post("/auth/register")
-                        .body(StringBody(
-                                "{\"name\":\"${name}\",\"regnumber\":\"${regnumber}\",\"clsroom\":\"${clsroom}\",\"gender\":\"${gender}\",\"roles\":\"${roles}\",\"password\":\"${password}\"}"
-                        ))
+                        .body(StringBody(session -> jsonRepeated()))
                         .check(status().is(201))
-            );
+            ));
+
+    private static final ScenarioBuilder updateUser = scenario("Update Users")
+            .repeat(50).on(exec(
+                http("Update User")
+                    .put(session -> {
+                        int userId = ThreadLocalRandom.current().nextInt(1, 500);
+                        return "/auth/update/" + userId;
+                    })
+                        .body(StringBody(session -> jsonRepeated()))
+                        .check(status().is(200))
+            ));
 
     {
         setUp(
-            scn.injectOpen(
-                atOnceUsers(10),
-                rampUsers(50).during(30)
-            )
+            registerUser.injectOpen(atOnceUsers(10), rampUsers(50).during(30)),
+            updateUser.injectOpen(atOnceUsers(10), rampUsers(50).during(30))
+        ).assertions(
+            forAll().responseTime().max().lt(2000),
+            forAll().successfulRequests().percent().gt(95.0),
+            forAll().failedRequests().count().lt(100L)
         ).protocols(httpProtocol);
     }
 
@@ -49,9 +66,9 @@ public class AuthRegisterSimulation extends Simulation {
         String password = "12345";
         try (Connection conn = DriverManager.getConnection(url, user, password);
              Statement stmt = conn.createStatement()) {
-            // Example: Clean up users table before test
+
             stmt.executeUpdate("DELETE FROM users");
-            // Example: Check user count
+
             ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM users");
             if (rs.next()) {
                 System.out.println("User count before test: " + rs.getInt(1));
@@ -61,3 +78,4 @@ public class AuthRegisterSimulation extends Simulation {
         }
     }
 }
+
