@@ -3,9 +3,6 @@ package org.ichwan.gatling;
 import io.gatling.javaapi.core.Simulation;
 import io.gatling.javaapi.core.*;
 import io.gatling.javaapi.http.*;
-
-import static io.gatling.javaapi.core.CoreDsl.*;
-import static io.gatling.javaapi.http.HttpDsl.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -16,7 +13,7 @@ public class AuthRegisterSimulation extends Simulation {
 
     private static final String BASE_URL = "http://localhost:8080";
 
-    private static final HttpProtocolBuilder httpProtocol = http
+    private static final HttpProtocolBuilder httpProtocol = HttpDsl.http
             .baseUrl(BASE_URL)
             .acceptHeader("application/json")
             .contentTypeHeader("application/json");
@@ -29,33 +26,33 @@ public class AuthRegisterSimulation extends Simulation {
         );
     }
 
-    private static final ScenarioBuilder registerUser = scenario("Register Users")
-            .repeat(50).on(exec(
-                http("Register User")
+    private static final ScenarioBuilder registerUser = CoreDsl.scenario("Register Users")
+            .repeat(50).on(CoreDsl.exec(
+                HttpDsl.http("Register User")
                     .post("/auth/register")
-                        .body(StringBody(session -> jsonRepeated()))
-                        .check(status().is(201))
+                        .body(CoreDsl.StringBody(session -> jsonRepeated()))
+                        .check(HttpDsl.status().is(201))
             ));
 
-    private static final ScenarioBuilder updateUser = scenario("Update Users")
-            .repeat(50).on(exec(
-                http("Update User")
+    private static final ScenarioBuilder updateUser = CoreDsl.scenario("Update Users")
+            .repeat(50).on(CoreDsl.exec(
+                HttpDsl.http("Update User")
                     .put(session -> {
                         int userId = ThreadLocalRandom.current().nextInt(1, 500);
                         return "/auth/update/" + userId;
                     })
-                        .body(StringBody(session -> jsonRepeated()))
-                        .check(status().is(200))
+                        .body(CoreDsl.StringBody(session -> jsonRepeated()))
+                        .check(HttpDsl.status().is(200))
             ));
 
     {
         setUp(
-            registerUser.injectOpen(atOnceUsers(10), rampUsers(50).during(30)),
-            updateUser.injectOpen(atOnceUsers(10), rampUsers(50).during(30))
+            registerUser.injectOpen(CoreDsl.atOnceUsers(10), CoreDsl.rampUsers(50).during(30)),
+            updateUser.injectOpen(CoreDsl.atOnceUsers(10), CoreDsl.rampUsers(50).during(30))
         ).assertions(
-            forAll().responseTime().max().lt(2000),
-            forAll().successfulRequests().percent().gt(95.0),
-            forAll().failedRequests().count().lt(100L)
+            CoreDsl.forAll().responseTime().max().lt(2000),
+            CoreDsl.forAll().successfulRequests().percent().gt(95.0),
+            CoreDsl.forAll().failedRequests().count().lt(100L)
         ).protocols(httpProtocol);
     }
 
