@@ -64,12 +64,11 @@ public class AuthRegisterSimulation extends Simulation {
         try (Connection conn = DriverManager.getConnection(url, user, password);
              Statement stmt = conn.createStatement()) {
 
-            stmt.executeUpdate("DELETE FROM users");
-
             ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM users");
             if (rs.next()) {
                 System.out.println("User count before test: " + rs.getInt(1));
             }
+            stmt.executeUpdate("DELETE FROM users WHERE gender='M' AND clsroom='A'");
         } catch (Exception e) {
             e.printStackTrace();
         }
