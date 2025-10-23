@@ -1,5 +1,10 @@
 # students-report-alkarim
 
+[![Release](https://img.shields.io/badge/release-v1.0.0-blue.svg)](https://github.com/ichwansh03/report-alkarim-be/releases)
+[![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
+[![Quarkus](https://img.shields.io/badge/Quarkus-Framework-red)](https://quarkus.io)
+[![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](LICENSE)
+
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
