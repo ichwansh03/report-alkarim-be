@@ -6,7 +6,7 @@ public interface ClassRoomService<E> {
 
     E createClassRoom(E classRoom);
 
-    E getClassRoomById(Long id);
+    E getClassRoomByTeacherName(String teacherName);
 
     void updateClassRoom(E classRoom, Long id);
 
