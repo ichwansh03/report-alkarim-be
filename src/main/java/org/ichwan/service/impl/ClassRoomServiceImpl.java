@@ -1,35 +1,60 @@
 package org.ichwan.service.impl;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import org.ichwan.domain.ClassRoom;
+import org.ichwan.repository.ClassRoomRepository;
+import org.ichwan.repository.UserRepository;
 import org.ichwan.service.ClassRoomService;
 
 import java.util.List;
 
 @ApplicationScoped
 public class ClassRoomServiceImpl implements ClassRoomService<ClassRoom> {
+
+    @Inject
+    private ClassRoomRepository repository;
+
+    @Inject
+    private UserRepository userRepository;
+
     @Override
     public ClassRoom createClassRoom(ClassRoom classRoom) {
-        return null;
+
+        ClassRoom room = new ClassRoom();
+        room.setName(classRoom.getName());
+        room.setTeacherName(classRoom.getTeacherName());
+        room.setStudentCount(userRepository.findByClsroomAndRoles(classRoom.getName(), "STUDENT").size());
+        repository.persist(room);
+        return room;
     }
 
     @Override
-    public ClassRoom getClassRoomById(Long id) {
-        return null;
+    public ClassRoom getClassRoomByTeacherName(String teacherName) {
+        return repository.findByTeacherName(teacherName);
     }
+
 
     @Override
     public void updateClassRoom(ClassRoom classRoom, Long id) {
-
+        if (repository.findById(id) != null) {
+            ClassRoom room = repository.findById(id);
+            room.setName(classRoom.getName());
+            room.setTeacherName(classRoom.getTeacherName());
+            room.setStudentCount(userRepository.findByClsroomAndRoles(classRoom.getName(), "STUDENT").size());
+            repository.persist(room);
+        } else {
+            throw new IllegalArgumentException("classroom not found");
+        }
     }
 
     @Override
     public void deleteClassRoom(Long id) {
-
+        repository.deleteById(id);
     }
 
     @Override
     public List<ClassRoom> getAllClassRooms() {
-        return List.of();
+        return repository.listAll();
     }
 }

@@ -6,4 +6,8 @@ import org.ichwan.domain.ClassRoom;
 
 @ApplicationScoped
 public class ClassRoomRepository implements PanacheRepository<ClassRoom> {
+
+    public ClassRoom findByTeacherName(String teacherName) {
+        return find("teacherName", teacherName).firstResult();
+    }
 }
