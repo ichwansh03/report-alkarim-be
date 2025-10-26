@@ -17,7 +17,7 @@ services:
       - 5050:80
     depends_on:
       - postgres
-  quarkus:
+  alkarim:
     image: report-student-alkarim
     container_name: report-alkarim
     depends_on:

@@ -58,6 +58,20 @@ You can then execute your native executable with: `./target/students-report-alka
 
 If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
 
+## Build with Docker
+
+First, run the following command to generate jar file:
+
+```shell script
+./mvnw clean install
+```
+
+You can build the application Docker image using:
+
+```shell script
+docker build -f src/main/docker/Dockerfile.jvm -t report-student-alkarim .
+```
+
 ## Related Guides
 
 - REST ([guide](https://quarkus.io/guides/rest)): A Jakarta REST implementation utilizing build time processing and Vert.x. This extension is not compatible with the quarkus-resteasy extension, or any of the extensions that depend on it.
