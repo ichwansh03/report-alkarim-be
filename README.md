@@ -63,7 +63,7 @@ If you want to learn more about building native executables, please consult <htt
 First, run the following command to generate jar file:
 
 ```shell script
-./mvnw clean install
+./mvnw clean package
 ```
 
 You can build the application Docker image using:

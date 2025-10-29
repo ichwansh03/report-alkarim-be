@@ -1,11 +1,13 @@
 package org.ichwan.service.impl;
 
+import io.quarkus.cache.CacheResult;
 import io.quarkus.elytron.security.common.BcryptUtil;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.ichwan.domain.User;
 import org.ichwan.repository.UserRepository;
+import org.ichwan.util.UserRole;
 
 import java.util.List;
 
@@ -67,9 +69,10 @@ public class UserServiceImpl implements org.ichwan.service.UserService<User> {
         return userRepository.findByClsroomAndRoles(classroom, roles);
     }
 
+    @CacheResult(cacheName = "usersByRoles")
     @Override
     public List<User> findByRoles(String roles) {
-        return userRepository.findByRoles(roles);
+        return userRepository.findByRoles(UserRole.valueOf(roles.toUpperCase()));
     }
 
     @Override

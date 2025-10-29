@@ -3,6 +3,7 @@ package org.ichwan.service.impl;
 import io.quarkus.elytron.security.common.BcryptUtil;
 import org.ichwan.domain.User;
 import org.ichwan.repository.UserRepository;
+import org.ichwan.util.UserRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -51,7 +52,7 @@ class UserServiceImplTest {
 
     @Test
     void testFindByRoles() {
-        when(userRepository.findByRoles("STUDENT")).thenReturn(Collections.emptyList());
+        when(userRepository.findByRoles(UserRole.STUDENT)).thenReturn(Collections.emptyList());
         List<User> users = userService.findByRoles("STUDENT");
         assertNotNull(users);
     }
