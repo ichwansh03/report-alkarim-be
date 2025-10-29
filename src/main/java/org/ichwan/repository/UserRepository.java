@@ -3,6 +3,7 @@ package org.ichwan.repository;
 import io.quarkus.hibernate.orm.panache.PanacheRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.ichwan.domain.User;
+import org.ichwan.util.UserRole;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class UserRepository implements PanacheRepository<User> {
         return find("clsroom = ?1 and roles = ?2", classroom, roles).list();
     }
 
-    public List<User> findByRoles(String roles) {
+    public List<User> findByRoles(UserRole roles) {
         return find("roles", roles).list();
     }
 }
