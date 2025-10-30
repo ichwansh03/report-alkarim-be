@@ -1,5 +1,7 @@
 package org.ichwan.service.impl;
 
+import io.quarkus.cache.CacheInvalidate;
+import io.quarkus.cache.CacheResult;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.ichwan.domain.ClassRoom;
@@ -48,11 +50,13 @@ public class ClassRoomServiceImpl implements ClassRoomService<ClassRoom> {
         }
     }
 
+    @CacheInvalidate(cacheName = "classrooms")
     @Override
     public void deleteClassRoom(Long id) {
         repository.deleteById(id);
     }
 
+    @CacheResult(cacheName = "classrooms", lockTimeout = 3000)
     @Override
     public List<ClassRoom> getAllClassRooms() {
         return repository.listAll();

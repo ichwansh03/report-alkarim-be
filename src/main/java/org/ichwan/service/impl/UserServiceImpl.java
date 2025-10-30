@@ -70,7 +70,7 @@ public class UserServiceImpl implements org.ichwan.service.UserService<User> {
         return userRepository.findByClsroomAndRoles(classroom, roles);
     }
 
-    @CacheResult(cacheName = "usersByRoles")
+    @CacheResult(cacheName = "usersByRoles", lockTimeout = 3000)
     @Override
     public List<User> findByRoles(String roles) {
         return userRepository.findByRoles(UserRole.valueOf(roles.toUpperCase()));
