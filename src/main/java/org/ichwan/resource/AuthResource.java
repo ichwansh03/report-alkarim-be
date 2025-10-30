@@ -77,6 +77,13 @@ public class AuthResource {
         return Response.ok(userService.findByRoles(roles)).build();
     }
 
+    @DELETE
+    @Path("/user/delete/{id}")
+    public Response deleteUser(@PathParam("id") Long id) {
+        userService.deleteUser(id);
+        return Response.ok("user deleted").build();
+    }
+
     @POST
     @Path("/login")
     public Response login(AuthRequest req) {
