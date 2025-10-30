@@ -19,4 +19,6 @@ public interface UserService<E> {
     List<User> findByRoles(String roles);
 
     boolean authenticate(String rawPassword, String passwordHash);
+
+    void deleteUser(Long id);
 }

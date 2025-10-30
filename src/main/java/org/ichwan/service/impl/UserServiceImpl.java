@@ -1,5 +1,6 @@
 package org.ichwan.service.impl;
 
+import io.quarkus.cache.CacheInvalidate;
 import io.quarkus.cache.CacheResult;
 import io.quarkus.elytron.security.common.BcryptUtil;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -79,5 +80,12 @@ public class UserServiceImpl implements org.ichwan.service.UserService<User> {
     public boolean authenticate(String rawPassword, String passwordHash) {
 
         return BcryptUtil.matches(rawPassword, passwordHash);
+    }
+
+    @CacheInvalidate(cacheName = "usersByRoles")
+    @Transactional
+    @Override
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
     }
 }

@@ -1,5 +1,7 @@
 package org.ichwan.service.impl;
 
+import io.quarkus.cache.CacheInvalidate;
+import io.quarkus.cache.CacheResult;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -14,6 +16,7 @@ public class CategoryServiceImpl {
     @Inject
     CategoryRepository repository;
 
+    @CacheResult(cacheName = "allCategories")
     public List<Category> getAllCategories() {
         return repository.listAll();
     }
@@ -23,6 +26,7 @@ public class CategoryServiceImpl {
         repository.persistAndFlush(new Category(name));
     }
 
+    @CacheInvalidate(cacheName = "allCategories")
     @Transactional
     public void deleteCategory(Long id) {
         Category category = repository.findById(id);

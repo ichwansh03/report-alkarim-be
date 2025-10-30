@@ -1,5 +1,8 @@
 package org.ichwan.service.impl;
 
+import io.quarkus.cache.CacheInvalidate;
+import io.quarkus.cache.CacheInvalidateAll;
+import io.quarkus.cache.CacheResult;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -18,11 +21,13 @@ public class ReportServiceImpl implements ReportService<Report> {
     @Inject
     UserRepository userRepository;
 
+    @CacheResult(cacheName = "reportsByRegnumber")
     @Override
     public List<Report> getReportsByRegnumber(String regnumber) {
         return repository.findByUserRegnumber(regnumber);
     }
 
+    @CacheResult(cacheName = "reportsByUserName")
     @Override
     public List<Report> getReportsByUserName(String name) {
         return repository.findByUserName(name);
@@ -60,6 +65,8 @@ public class ReportServiceImpl implements ReportService<Report> {
         repository.persist(report);
     }
 
+    @CacheInvalidate(cacheName = "reportsByRegnumber")
+    @CacheInvalidate(cacheName = "reportsByUserName")
     @Transactional
     @Override
     public void deleteReport(Long id) {
