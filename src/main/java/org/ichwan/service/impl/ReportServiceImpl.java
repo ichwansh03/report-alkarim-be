@@ -21,13 +21,13 @@ public class ReportServiceImpl implements ReportService<Report> {
     @Inject
     UserRepository userRepository;
 
-    @CacheResult(cacheName = "reportsByRegnumber")
+    @CacheResult(cacheName = "reports", lockTimeout = 3000)
     @Override
     public List<Report> getReportsByRegnumber(String regnumber) {
         return repository.findByUserRegnumber(regnumber);
     }
 
-    @CacheResult(cacheName = "reportsByUserName")
+    @CacheResult(cacheName = "reports", lockTimeout = 3000)
     @Override
     public List<Report> getReportsByUserName(String name) {
         return repository.findByUserName(name);
@@ -65,8 +65,7 @@ public class ReportServiceImpl implements ReportService<Report> {
         repository.persist(report);
     }
 
-    @CacheInvalidate(cacheName = "reportsByRegnumber")
-    @CacheInvalidate(cacheName = "reportsByUserName")
+    @CacheInvalidate(cacheName = "reports")
     @Transactional
     @Override
     public void deleteReport(Long id) {

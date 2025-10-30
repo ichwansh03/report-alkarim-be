@@ -1,5 +1,7 @@
 package org.ichwan.service.impl;
 
+import io.quarkus.cache.CacheInvalidate;
+import io.quarkus.cache.CacheResult;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -34,16 +36,19 @@ public class QuestionServiceImpl implements QuestionService<Question> {
         return repository.findById(id);
     }
 
+    @CacheResult(cacheName = "questions", lockTimeout = 3000)
     @Override
     public List<Question> getQuestionByTarget(String target) {
         return repository.findQuestionByTarget(target);
     }
 
+    @CacheResult(cacheName = "questions", lockTimeout = 3000)
     @Override
     public List<Question> getQuestionByCategory(String category) {
         return repository.findQuestionByCategory(category);
     }
 
+    @CacheResult(cacheName = "questions", lockTimeout = 3000)
     @Override
     public List<Question> getQuestionByCategoryAndTarget(String category, String target) {
         return repository.findQuestionByCategoryAndTarget(category, target);
@@ -63,6 +68,7 @@ public class QuestionServiceImpl implements QuestionService<Question> {
         }
     }
 
+    @CacheInvalidate(cacheName = "questions")
     @Override
     public void deleteQuestion(Long id) {
         if (repository.findById(id) != null) {
