@@ -8,19 +8,19 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class RedisService {
 
-    private final ValueCommands<String, Long> valueCommands;
-    private final KeyCommands<String> keyCommands;
+    private final ValueCommands<String, Long> valueOps;
+    private final KeyCommands<String> keyOps;
 
     public RedisService(RedisDataSource dataSource) {
-        this.valueCommands = dataSource.value(Long.class);
-        this.keyCommands = dataSource.key();
+        this.valueOps = dataSource.value(Long.class);
+        this.keyOps = dataSource.key();
     }
 
     public boolean allowed(String key, long limit, long windowInSeconds) {
         String redisKey = "rate_limiter:" + key;
-        long count = valueCommands.incrby(redisKey, 1);
+        long count = valueOps.incrby(redisKey, 1);
         if (count == 1) {
-            keyCommands.expire(redisKey, windowInSeconds);
+            keyOps.expire(redisKey, windowInSeconds);
         }
         return count <= limit;
     }

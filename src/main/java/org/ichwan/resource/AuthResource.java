@@ -7,6 +7,7 @@ import jakarta.ws.rs.core.Response;
 import org.ichwan.domain.User;
 import org.ichwan.dto.AuthRequest;
 import org.ichwan.dto.AuthResponse;
+import org.ichwan.service.impl.RedisService;
 import org.ichwan.service.impl.UserServiceImpl;
 
 import java.time.Instant;
@@ -19,6 +20,8 @@ public class AuthResource {
 
     @Inject
     private UserServiceImpl userService;
+    @Inject
+    private RedisService redisService;
 
     @POST
     @Path("/register")
@@ -91,6 +94,11 @@ public class AuthResource {
         if (user == null || !userService.authenticate(req.password(), user.getPassword())) {
 
             return Response.status(Response.Status.UNAUTHORIZED).entity("invalid email or password").build();
+        }
+
+        boolean allowed = redisService.allowed(req.regnumber(), 5, 60);
+        if (!allowed) {
+            return Response.status(Response.Status.TOO_MANY_REQUESTS).entity("Too many login attempts. Please try again later.").build();
         }
 
         String token = Jwt.issuer("report-alkarim-issuer")
