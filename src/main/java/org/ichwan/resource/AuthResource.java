@@ -96,11 +96,6 @@ public class AuthResource {
             return Response.status(Response.Status.UNAUTHORIZED).entity("invalid email or password").build();
         }
 
-        boolean allowed = redisService.allowed(req.regnumber(), 5, 60);
-        if (!allowed) {
-            return Response.status(Response.Status.TOO_MANY_REQUESTS).entity("Too many login attempts. Please try again later.").build();
-        }
-
         String token = Jwt.issuer("report-alkarim-issuer")
                 .subject(String.valueOf(user.getId()))
                 .upn(user.getName())
