@@ -7,7 +7,6 @@ import jakarta.ws.rs.core.Response;
 import org.ichwan.domain.User;
 import org.ichwan.dto.AuthRequest;
 import org.ichwan.dto.AuthResponse;
-import org.ichwan.service.impl.RedisService;
 import org.ichwan.service.impl.UserServiceImpl;
 
 import java.time.Instant;
@@ -20,8 +19,6 @@ public class AuthResource {
 
     @Inject
     private UserServiceImpl userService;
-    @Inject
-    private RedisService redisService;
 
     @POST
     @Path("/register")
