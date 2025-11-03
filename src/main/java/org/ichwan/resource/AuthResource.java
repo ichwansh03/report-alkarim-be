@@ -93,10 +93,9 @@ public class AuthResource {
             return Response.status(Response.Status.UNAUTHORIZED).entity("invalid email or password").build();
         }
 
-        String token = Jwt.issuer("report-alkarim-issuer")
-                .subject(String.valueOf(user.getId()))
+        String token = Jwt.subject(String.valueOf(user.getId()))
                 .upn(user.getName())
-                .groups(user.getRoles().toString())
+                .groups(user.getRoles().name())
                 .expiresAt(Instant.now().plus(1, ChronoUnit.HOURS))
                 .sign();
 
