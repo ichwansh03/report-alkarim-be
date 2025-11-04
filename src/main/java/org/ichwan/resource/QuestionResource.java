@@ -1,5 +1,6 @@
 package org.ichwan.resource;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
@@ -17,6 +18,7 @@ public class QuestionResource {
 
     @POST
     @Path("/create")
+    @RolesAllowed({"TEACHER","ADMINISTRATOR"})
     public Response createQuestion(QuestionRequest question) {
         Question quest = new Question();
         quest.setQuestion(question.question());
@@ -30,24 +32,28 @@ public class QuestionResource {
 
     @GET
     @Path("/target/{target}")
+    @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response getQuestionsByTarget(@PathParam("target") String target) {
         return Response.ok(service.getQuestionByTarget(target)).build();
     }
 
     @GET
     @Path("/category/{category}")
+    @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response getQuestionsByCategory(@PathParam("category") String category) {
         return Response.ok(service.getQuestionByCategory(category)).build();
     }
 
     @GET
     @Path("/category/{category}/target/{target}")
+    @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response getQuestionsByCategoryAndTarget(@PathParam("category") String category, @PathParam("target") String target) {
         return Response.ok(service.getQuestionByCategoryAndTarget(category, target)).build();
     }
 
     @PUT
     @Path("/update/{id}")
+    @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response updateQuestion(@PathParam("id") Long id, QuestionRequest question) {
         Question quest = service.getQuestionById(id);
         if (quest == null) {
@@ -63,6 +69,7 @@ public class QuestionResource {
 
     @DELETE
     @Path("/delete/{id}")
+    @RolesAllowed({"TEACHER","ADMINISTRATOR"})
     public Response deleteQuestion(@PathParam("id") Long id) {
         service.deleteQuestion(id);
         return Response.ok("Question deleted").build();
