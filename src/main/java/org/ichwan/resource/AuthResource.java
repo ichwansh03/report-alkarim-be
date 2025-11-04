@@ -1,6 +1,7 @@
 package org.ichwan.resource;
 
 import io.smallrye.jwt.build.Jwt;
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
@@ -12,6 +13,7 @@ import org.ichwan.service.impl.UserServiceImpl;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Set;
 
 @Path("/auth")
 @Consumes("application/json")
@@ -21,9 +23,16 @@ public class AuthResource {
     @Inject
     private UserServiceImpl userService;
 
+    @GET
+    @Path("/test")
+    @RolesAllowed({"TEACHER","ADMINISTRATOR"})
+    public Response testAuth() {
+        return Response.ok("Authentication successful").build();
+    }
+
     @POST
     @Path("/register")
-    @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
+    @PermitAll
     public Response register(AuthRequest req) {
         if (req.regnumber() == null || req.password() == null) {
             return Response.status(Response.Status.BAD_REQUEST).entity("NISN/NIP dan password salah").build();
@@ -93,7 +102,7 @@ public class AuthResource {
 
     @POST
     @Path("/login")
-    @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
+    @PermitAll
     public Response login(AuthRequest req) {
         User user = userService.findByRegnumber(req.regnumber());
         if (user == null || !userService.authenticate(req.password(), user.getPassword())) {
@@ -101,9 +110,11 @@ public class AuthResource {
             return Response.status(Response.Status.UNAUTHORIZED).entity("invalid email or password").build();
         }
 
-        String token = Jwt.subject(String.valueOf(user.getId()))
+        String token = Jwt
+                .issuer("report-alkarim-issuer")
+                .subject(String.valueOf(user.getId()))
                 .upn(user.getName())
-                .groups(user.getRoles().name())
+                .groups(Set.of(user.getRoles().name()))
                 .expiresAt(Instant.now().plus(1, ChronoUnit.HOURS))
                 .sign();
 
