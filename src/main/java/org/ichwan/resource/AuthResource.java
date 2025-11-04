@@ -1,6 +1,7 @@
 package org.ichwan.resource;
 
 import io.smallrye.jwt.build.Jwt;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
@@ -22,6 +23,7 @@ public class AuthResource {
 
     @POST
     @Path("/register")
+    @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response register(AuthRequest req) {
         if (req.regnumber() == null || req.password() == null) {
             return Response.status(Response.Status.BAD_REQUEST).entity("NISN/NIP dan password salah").build();
@@ -41,6 +43,7 @@ public class AuthResource {
 
     @PUT
     @Path("/update/{id}")
+    @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response update(Long id, AuthRequest req) {
         User u = userService.finById(id);
         if (u == null) {
@@ -57,12 +60,14 @@ public class AuthResource {
 
     @GET
     @Path("/class/{class}/roles/{roles}")
+    @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response getUsersByClassAndRoles(@PathParam("class") String clsroom, @PathParam("roles") String roles) {
         return Response.ok(userService.findByClsroomAndRoles(clsroom, roles)).build();
     }
 
     @GET
     @Path("/user/{regnumber}")
+    @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response getUserByRegnumber(@PathParam("regnumber") String regnumber) {
         User user = userService.findByRegnumber(regnumber);
         if (user == null) {
@@ -73,12 +78,14 @@ public class AuthResource {
 
     @GET
     @Path("/roles/{roles}")
+    @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response getUsersByRoles(@PathParam("roles") String roles) {
         return Response.ok(userService.findByRoles(roles)).build();
     }
 
     @DELETE
     @Path("/user/delete/{id}")
+    @RolesAllowed("ADMINISTRATOR")
     public Response deleteUser(@PathParam("id") Long id) {
         userService.deleteUser(id);
         return Response.ok("user deleted").build();
@@ -86,6 +93,7 @@ public class AuthResource {
 
     @POST
     @Path("/login")
+    @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response login(AuthRequest req) {
         User user = userService.findByRegnumber(req.regnumber());
         if (user == null || !userService.authenticate(req.password(), user.getPassword())) {
