@@ -3,6 +3,7 @@ package org.ichwan.service.impl;
 import io.quarkus.cache.CacheInvalidate;
 import io.quarkus.cache.CacheResult;
 import io.quarkus.elytron.security.common.BcryptUtil;
+import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -10,7 +11,10 @@ import org.ichwan.domain.User;
 import org.ichwan.repository.UserRepository;
 import org.ichwan.util.UserRole;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Set;
 
 @ApplicationScoped
 public class UserServiceImpl implements org.ichwan.service.UserService<User> {
@@ -87,5 +91,15 @@ public class UserServiceImpl implements org.ichwan.service.UserService<User> {
     @Override
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public String generateAccessToken(User user) {
+        return Jwt
+                .issuer("report-alkarim-issuer")
+                .subject(String.valueOf(user.getId()))
+                .upn(user.getName())
+                .groups(Set.of(user.getRoles().name()))
+                .expiresAt(Instant.now().plus(1, ChronoUnit.HOURS))
+                .sign();
     }
 }

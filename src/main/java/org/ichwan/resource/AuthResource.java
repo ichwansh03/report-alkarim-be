@@ -11,10 +11,6 @@ import org.ichwan.dto.AuthRequest;
 import org.ichwan.dto.AuthResponse;
 import org.ichwan.service.impl.UserServiceImpl;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Set;
-
 @Path("/auth")
 @Consumes("application/json")
 @Produces("application/json")
@@ -110,14 +106,6 @@ public class AuthResource {
             return Response.status(Response.Status.UNAUTHORIZED).entity("invalid email or password").build();
         }
 
-        String token = Jwt
-                .issuer("report-alkarim-issuer")
-                .subject(String.valueOf(user.getId()))
-                .upn(user.getName())
-                .groups(Set.of(user.getRoles().name()))
-                .expiresAt(Instant.now().plus(1, ChronoUnit.HOURS))
-                .sign();
-
-        return Response.ok(new AuthResponse(req.regnumber(), token)).build();
+        return Response.ok(new AuthResponse(req.regnumber(), userService.generateAccessToken(user))).build();
     }
 }
