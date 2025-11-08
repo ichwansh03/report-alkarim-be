@@ -1,4 +1,4 @@
 package org.ichwan.dto;
 
-public record TokenRequest() {
+public record TokenRequest(String refreshToken) {
 }

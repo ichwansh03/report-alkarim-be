@@ -1,15 +1,20 @@
 package org.ichwan.resource;
 
-import io.smallrye.jwt.build.Jwt;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
+import org.ichwan.domain.RefreshToken;
 import org.ichwan.domain.User;
 import org.ichwan.dto.AuthRequest;
 import org.ichwan.dto.AuthResponse;
+import org.ichwan.dto.TokenRequest;
+import org.ichwan.dto.TokenResponse;
+import org.ichwan.service.impl.RefreshTokenService;
 import org.ichwan.service.impl.UserServiceImpl;
+
+import java.util.Optional;
 
 @Path("/auth")
 @Consumes("application/json")
@@ -18,6 +23,8 @@ public class AuthResource {
 
     @Inject
     private UserServiceImpl userService;
+    @Inject
+    private RefreshTokenService tokenService;
 
     @GET
     @Path("/test")
@@ -108,4 +115,38 @@ public class AuthResource {
 
         return Response.ok(new AuthResponse(req.regnumber(), userService.generateAccessToken(user))).build();
     }
+
+    @POST
+    @Path("/refresh")
+    public Response refreshToken(TokenRequest request) {
+
+        // Validasi ada input atau tidak
+        if (request.refreshToken() == null || request.refreshToken().isBlank()) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("refreshToken is required")
+                    .build();
+        }
+
+        // Cari refresh token di DB
+        Optional<RefreshToken> storedRt = tokenService.validateRefreshToken(request.refreshToken());
+
+        if (storedRt.isEmpty()) {
+            // refresh token tidak valid / expired / tidak ditemukan
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity("Invalid or expired refresh token")
+                    .build();
+        }
+
+        RefreshToken oldRt = storedRt.get();
+        String newAccessToken = tokenService.generateNewToken(oldRt.getUserId());
+
+        // Rotasi refresh token (hapus lama → buat baru)
+        RefreshToken newRt = tokenService.createRefreshToken(oldRt.getUserId());
+
+        // Return token baru
+        return Response.ok(
+                new TokenResponse(newAccessToken, newRt.getToken())
+        ).build();
+    }
+
 }
