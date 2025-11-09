@@ -1,4 +1,4 @@
-package org.ichwan.service.impl;
+package org.ichwan.util;
 
 import io.quarkus.redis.datasource.RedisDataSource;
 import io.quarkus.redis.datasource.keys.KeyCommands;

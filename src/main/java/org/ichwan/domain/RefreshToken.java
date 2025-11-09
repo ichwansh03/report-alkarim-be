@@ -1,8 +1,6 @@
 package org.ichwan.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.Instant;
 
@@ -10,6 +8,9 @@ import java.time.Instant;
 @Table(name = "refresh_tokens")
 public class RefreshToken extends Auditable{
 
+    @Id
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+    private Long id;
     @Column(unique = true, nullable = false)
     private String token;
     @Column(nullable = false)
@@ -18,6 +19,14 @@ public class RefreshToken extends Auditable{
     private Instant expireAt;
 
     public RefreshToken() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getToken() {

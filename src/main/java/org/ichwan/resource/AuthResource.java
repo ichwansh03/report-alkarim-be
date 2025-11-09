@@ -11,7 +11,7 @@ import org.ichwan.dto.AuthRequest;
 import org.ichwan.dto.AuthResponse;
 import org.ichwan.dto.TokenRequest;
 import org.ichwan.dto.TokenResponse;
-import org.ichwan.service.impl.RefreshTokenService;
+import org.ichwan.util.RefreshTokenService;
 import org.ichwan.service.impl.UserServiceImpl;
 
 import java.util.Optional;

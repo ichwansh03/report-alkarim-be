@@ -1,9 +1,10 @@
-package org.ichwan.service.impl;
+package org.ichwan.util;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.ichwan.domain.RefreshToken;
 import org.ichwan.repository.RefreshTokenRepository;
+import org.ichwan.service.impl.UserServiceImpl;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
