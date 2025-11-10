@@ -141,7 +141,7 @@ public class AuthResource {
         String newAccessToken = tokenService.generateNewToken(oldRt.getUserId());
 
         // Rotasi refresh token (hapus lama → buat baru)
-        RefreshToken newRt = tokenService.createRefreshToken(oldRt.getUserId());
+        RefreshToken newRt = tokenService.changeToken(oldRt);
 
         // Return token baru
         return Response.ok(
