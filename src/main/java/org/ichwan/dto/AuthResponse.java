@@ -1,4 +1,6 @@
 package org.ichwan.dto;
 
-public record AuthResponse(String regnumber, String token) {
+import org.ichwan.domain.User;
+
+public record AuthResponse(String regnumber, String token, User user) {
 }
