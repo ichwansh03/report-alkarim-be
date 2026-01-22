@@ -7,10 +7,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import org.ichwan.domain.RefreshToken;
 import org.ichwan.domain.User;
-import org.ichwan.dto.AuthRequest;
-import org.ichwan.dto.AuthResponse;
-import org.ichwan.dto.TokenRequest;
-import org.ichwan.dto.TokenResponse;
+import org.ichwan.dto.*;
 import org.ichwan.util.RefreshTokenService;
 import org.ichwan.service.impl.UserServiceImpl;
 
@@ -57,7 +54,7 @@ public class AuthResource {
     @Path("/update/{id}")
     @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response update(Long id, AuthRequest req) {
-        User u = userService.finById(id);
+        User u = userService.findEntityById(id);
         if (u == null) {
             return Response.status(Response.Status.BAD_REQUEST).entity("User tidak ditemukan").build();
         }
@@ -81,7 +78,7 @@ public class AuthResource {
     @Path("/user/{regnumber}")
     @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response getUserByRegnumber(@PathParam("regnumber") String regnumber) {
-        User user = userService.findByRegnumber(regnumber);
+        UserResponse user = userService.findByRegnumber(regnumber);
         if (user == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("User not found").build();
         }
@@ -107,8 +104,8 @@ public class AuthResource {
     @Path("/login")
     @PermitAll
     public Response login(AuthRequest req) {
-        User user = userService.findByRegnumber(req.regnumber());
-        if (user == null || !userService.authenticate(req.password(), user.getPassword())) {
+        UserResponse user = userService.findByRegnumber(req.regnumber());
+        if (user == null || !userService.authenticate(req.password(), user.regnumber())) {
 
             return Response.status(Response.Status.UNAUTHORIZED).entity("invalid email or password").build();
         }
@@ -119,19 +116,15 @@ public class AuthResource {
     @POST
     @Path("/refresh")
     public Response refreshToken(TokenRequest request) {
-
-        // Validasi ada input atau tidak
         if (request.refreshToken() == null || request.refreshToken().isBlank()) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("refreshToken is required")
                     .build();
         }
 
-        // Cari refresh token di DB
         Optional<RefreshToken> storedRt = tokenService.validateRefreshToken(request.refreshToken());
 
         if (storedRt.isEmpty()) {
-            // refresh token tidak valid / expired / tidak ditemukan
             return Response.status(Response.Status.UNAUTHORIZED)
                     .entity("Invalid or expired refresh token")
                     .build();
@@ -140,10 +133,8 @@ public class AuthResource {
         RefreshToken oldRt = storedRt.get();
         String newAccessToken = tokenService.generateNewToken(oldRt.getUserId());
 
-        // Rotasi refresh token (hapus lama → buat baru)
         RefreshToken newRt = tokenService.changeToken(oldRt);
 
-        // Return token baru
         return Response.ok(
                 new TokenResponse(newAccessToken, newRt.getToken())
         ).build();

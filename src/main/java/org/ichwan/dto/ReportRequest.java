@@ -1,4 +1,4 @@
 package org.ichwan.dto;
 
-public record ReportRequest(String category, String content, String regnumber, String score, String answer) {
+public record ReportRequest(String category, String content, Long userId, String score, String answer) {
 }

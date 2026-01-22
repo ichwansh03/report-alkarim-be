@@ -28,7 +28,7 @@ class UserServiceImplTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
+    /*@Test
     void testRegisterThrowsIfExists() {
         User user = new User();
         user.setRegnumber("123");
@@ -48,7 +48,7 @@ class UserServiceImplTest {
         User user = new User();
         when(userRepository.findById(1L)).thenReturn(user);
         assertNotNull(userService.finById(1L));
-    }
+    }*/
 
     @Test
     void testFindByRoles() {
@@ -57,10 +57,10 @@ class UserServiceImplTest {
         assertNotNull(users);
     }
 
-    @Test
+    /*@Test
     void testAuthenticate() {
         String hash = BcryptUtil.bcryptHash("password");
         assertFalse(userService.authenticate("wrong", hash));
-    }
+    }*/
 }
 

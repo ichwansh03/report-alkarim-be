@@ -8,7 +8,9 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.ichwan.domain.User;
+import org.ichwan.dto.UserResponse;
 import org.ichwan.repository.UserRepository;
+import org.ichwan.util.MapperConfig;
 import org.ichwan.util.UserRole;
 
 import java.time.Instant;
@@ -17,10 +19,13 @@ import java.util.List;
 import java.util.Set;
 
 @ApplicationScoped
-public class UserServiceImpl implements org.ichwan.service.UserService<User> {
+public class UserServiceImpl implements org.ichwan.service.UserService<User, UserResponse> {
 
     @Inject
     private UserRepository userRepository;
+
+    @Inject
+    private MapperConfig mapper;
 
     @Override
     @Transactional
@@ -60,12 +65,19 @@ public class UserServiceImpl implements org.ichwan.service.UserService<User> {
     }
 
     @Override
-    public User findByRegnumber(String regnumber) {
-        return userRepository.findByRegnumber(regnumber);
+    public UserResponse findByRegnumber(String regnumber) {
+        User user = userRepository.findByRegnumber(regnumber);
+        return mapper.map(user, UserResponse.class);
     }
 
     @Override
-    public User finById(Long id) {
+    public UserResponse finById(Long id) {
+        User user = userRepository.findById(id);
+        return mapper.map(user, UserResponse.class);
+    }
+
+    @Override
+    public User findEntityById(Long id) {
         return userRepository.findById(id);
     }
 
@@ -81,9 +93,9 @@ public class UserServiceImpl implements org.ichwan.service.UserService<User> {
     }
 
     @Override
-    public boolean authenticate(String rawPassword, String passwordHash) {
+    public boolean authenticate(String rawPassword, String regNumber) {
 
-        return BcryptUtil.matches(rawPassword, passwordHash);
+        return BcryptUtil.matches(rawPassword, userRepository.findByRegnumber(regNumber).getPassword());
     }
 
     @CacheInvalidate(cacheName = "usersByRoles")
@@ -93,12 +105,12 @@ public class UserServiceImpl implements org.ichwan.service.UserService<User> {
         userRepository.deleteById(id);
     }
 
-    public String generateAccessToken(User user) {
+    public String generateAccessToken(UserResponse user) {
         return Jwt
                 .issuer("report-alkarim-issuer")
-                .subject(String.valueOf(user.getId()))
-                .upn(user.getName())
-                .groups(Set.of(user.getRoles().name()))
+                .subject(String.valueOf(user.regnumber()))
+                .upn(user.name())
+                .groups(Set.of(user.roles().name()))
                 .expiresAt(Instant.now().plus(1, ChronoUnit.HOURS))
                 .sign();
     }
