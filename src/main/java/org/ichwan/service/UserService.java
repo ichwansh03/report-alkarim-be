@@ -16,9 +16,9 @@ public interface UserService<E, R> {
 
     E findEntityById(Long id);
 
-    List<User> findByClsroomAndRoles(String classroom, String roles);
+    List<R> findByClsroomAndRoles(String classroom, String roles);
 
-    List<User> findByRoles(String roles);
+    List<R> findByRoles(String roles);
 
     boolean authenticate(String rawPassword, String passwordHash);
 

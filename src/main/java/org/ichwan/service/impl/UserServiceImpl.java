@@ -82,14 +82,16 @@ public class UserServiceImpl implements org.ichwan.service.UserService<User, Use
     }
 
     @Override
-    public List<User> findByClsroomAndRoles(String classroom, String roles) {
-        return userRepository.findByClsroomAndRoles(classroom, roles);
+    public List<UserResponse> findByClsroomAndRoles(String classroom, String roles) {
+        List<User> byClsroomAndRoles = userRepository.findByClsroomAndRoles(classroom, roles);
+        return mapper.mapList(byClsroomAndRoles, UserResponse.class);
     }
 
     @CacheResult(cacheName = "usersByRoles", lockTimeout = 3000)
     @Override
-    public List<User> findByRoles(String roles) {
-        return userRepository.findByRoles(UserRole.valueOf(roles.toUpperCase()));
+    public List<UserResponse> findByRoles(String roles) {
+        List<User> byRoles = userRepository.findByRoles(UserRole.valueOf(roles.toUpperCase()));
+        return mapper.mapList(byRoles, UserResponse.class);
     }
 
     @Override
