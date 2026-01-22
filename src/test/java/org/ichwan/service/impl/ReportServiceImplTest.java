@@ -1,6 +1,5 @@
 package org.ichwan.service.impl;
 
-import io.quarkus.test.junit.QuarkusTest;
 import org.ichwan.domain.Report;
 import org.ichwan.repository.ReportRepository;
 import org.ichwan.repository.UserRepository;
@@ -49,7 +48,7 @@ class ReportServiceImplTest {
     void testCreateReport() {
         Report report = new Report();
         when(userRepository.findByRegnumber("123")).thenReturn(null);
-        reportService.createReport(report, "123");
+        reportService.createReport(report, 123L);
         verify(reportRepository, times(1)).persist(report);
     }
 

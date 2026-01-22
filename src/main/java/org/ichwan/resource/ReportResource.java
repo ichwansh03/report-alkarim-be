@@ -27,9 +27,9 @@ public class ReportResource {
         report.setCategory(request.category());
         report.setContent(request.content());
         report.setAnswer(request.answer());
-        report.setUser(userService.findByRegnumber(request.regnumber()));
+        report.setUser(userService.findEntityById(request.userId()));
         report.setScore(request.score());
-        reportService.createReport(report, request.regnumber());
+        reportService.createReport(report, request.userId());
         return Response.status(Response.Status.CREATED).entity("report created").build();
     }
 

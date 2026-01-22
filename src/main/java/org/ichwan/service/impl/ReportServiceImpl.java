@@ -39,14 +39,14 @@ public class ReportServiceImpl implements ReportService<Report> {
 
     @Transactional
     @Override
-    public void createReport(Report entity, String regnumber) {
+    public void createReport(Report entity, Long userId) {
 
         Report report = new Report();
         report.setAnswer(entity.getAnswer());
         report.setCategory(entity.getCategory());
         report.setContent(entity.getContent());
         report.setScore(entity.getScore());
-        report.setUser(userRepository.findByRegnumber(regnumber));
+        report.setUser(userRepository.findById(userId));
         repository.persist(entity);
     }
 

@@ -28,7 +28,7 @@ public class RefreshTokenService {
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setToken(UUID.randomUUID().toString());
         refreshToken.setUserId(userId);
-        refreshToken.setExpireAt(Instant.now().plus(7, ChronoUnit.DAYS));
+        refreshToken.setExpireAt(Instant.now().plus(30, ChronoUnit.DAYS));
         return refreshToken;
     }
 
