@@ -27,24 +27,6 @@ public class UserServiceImpl implements org.ichwan.service.UserService<User, Use
     @Inject
     private MapperConfig mapper;
 
-    @Override
-    @Transactional
-    public void register(User entity) {
-        if (findByRegnumber(entity.getRegnumber()) != null) {
-            throw new IllegalArgumentException("account already exists");
-        }
-
-        User user = new User();
-        user.setName(entity.getName());
-        user.setRegnumber(entity.getRegnumber());
-        user.setClsroom(entity.getClsroom());
-        user.setGender(entity.getGender());
-        user.setRoles(entity.getRoles());
-        user.setPassword(BcryptUtil.bcryptHash(entity.getPassword()));
-        userRepository.persist(user);
-
-    }
-
     @Transactional
     @Override
     public void update(User entity, Long id) {
@@ -94,12 +76,6 @@ public class UserServiceImpl implements org.ichwan.service.UserService<User, Use
         return mapper.mapList(byRoles, UserResponse.class);
     }
 
-    @Override
-    public boolean authenticate(String rawPassword, String regNumber) {
-
-        return BcryptUtil.matches(rawPassword, userRepository.findByRegnumber(regNumber).getPassword());
-    }
-
     @CacheInvalidate(cacheName = "usersByRoles")
     @Transactional
     @Override
@@ -107,13 +83,4 @@ public class UserServiceImpl implements org.ichwan.service.UserService<User, Use
         userRepository.deleteById(id);
     }
 
-    public String generateAccessToken(UserResponse user) {
-        return Jwt
-                .issuer("report-alkarim-issuer")
-                .subject(String.valueOf(user.regnumber()))
-                .upn(user.name())
-                .groups(Set.of(user.roles().name()))
-                .expiresAt(Instant.now().plus(1, ChronoUnit.HOURS))
-                .sign();
-    }
 }

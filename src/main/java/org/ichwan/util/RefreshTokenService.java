@@ -4,6 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.ichwan.domain.RefreshToken;
 import org.ichwan.repository.RefreshTokenRepository;
+import org.ichwan.service.impl.AuthServiceImpl;
 import org.ichwan.service.impl.UserServiceImpl;
 
 import java.time.Instant;
@@ -18,10 +19,13 @@ public class RefreshTokenService {
     private RefreshTokenRepository repository;
 
     @Inject
+    private AuthServiceImpl authService;
+
+    @Inject
     private UserServiceImpl userService;
 
     public String generateNewToken(Long userId) {
-        return userService.generateAccessToken(userService.finById(userId));
+        return authService.generateAccessToken(userService.finById(userId));
     }
 
     public RefreshToken createRefreshToken(Long userId) {
