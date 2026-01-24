@@ -8,8 +8,9 @@ import jakarta.ws.rs.core.Response;
 import org.ichwan.domain.RefreshToken;
 import org.ichwan.domain.User;
 import org.ichwan.dto.*;
-import org.ichwan.util.RefreshTokenService;
+import org.ichwan.service.impl.AuthServiceImpl;
 import org.ichwan.service.impl.UserServiceImpl;
+import org.ichwan.util.RefreshTokenService;
 
 import java.util.Optional;
 
@@ -19,7 +20,11 @@ import java.util.Optional;
 public class AuthResource {
 
     @Inject
+    private AuthServiceImpl authService;
+
+    @Inject
     private UserServiceImpl userService;
+
     @Inject
     private RefreshTokenService tokenService;
 
@@ -46,58 +51,8 @@ public class AuthResource {
         u.setRoles(req.roles());
         u.setPassword(req.password());
 
-        userService.register(u);
+        authService.register(u);
         return Response.status(Response.Status.CREATED).entity("user created").build();
-    }
-
-    @PUT
-    @Path("/update/{id}")
-    @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
-    public Response update(Long id, AuthRequest req) {
-        User u = userService.findEntityById(id);
-        if (u == null) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("User tidak ditemukan").build();
-        }
-        u.setName(req.name());
-        u.setClsroom(req.clsroom());
-        u.setGender(req.gender());
-        u.setRoles(req.roles());
-        u.setPassword(req.password());
-        userService.update(u, id);
-        return Response.ok("user updated").build();
-    }
-
-    @GET
-    @Path("/class/{class}/roles/{roles}")
-    @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
-    public Response getUsersByClassAndRoles(@PathParam("class") String clsroom, @PathParam("roles") String roles) {
-        return Response.ok(userService.findByClsroomAndRoles(clsroom, roles)).build();
-    }
-
-    @GET
-    @Path("/user/{regnumber}")
-    @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
-    public Response getUserByRegnumber(@PathParam("regnumber") String regnumber) {
-        UserResponse user = userService.findByRegnumber(regnumber);
-        if (user == null) {
-            return Response.status(Response.Status.NOT_FOUND).entity("User not found").build();
-        }
-        return Response.ok(user).build();
-    }
-
-    @GET
-    @Path("/roles/{roles}")
-    @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
-    public Response getUsersByRoles(@PathParam("roles") String roles) {
-        return Response.ok(userService.findByRoles(roles)).build();
-    }
-
-    @DELETE
-    @Path("/user/delete/{id}")
-    @RolesAllowed("ADMINISTRATOR")
-    public Response deleteUser(@PathParam("id") Long id) {
-        userService.deleteUser(id);
-        return Response.ok("user deleted").build();
     }
 
     @POST
@@ -105,12 +60,12 @@ public class AuthResource {
     @PermitAll
     public Response login(AuthRequest req) {
         UserResponse user = userService.findByRegnumber(req.regnumber());
-        if (user == null || !userService.authenticate(req.password(), user.regnumber())) {
+        if (user == null || !authService.authenticate(req.password(), user.regnumber())) {
 
             return Response.status(Response.Status.UNAUTHORIZED).entity("invalid email or password").build();
         }
 
-        return Response.ok(new AuthResponse(req.regnumber(), userService.generateAccessToken(user), user)).build();
+        return Response.ok(new AuthResponse(req.regnumber(), authService.generateAccessToken(user), user)).build();
     }
 
     @POST

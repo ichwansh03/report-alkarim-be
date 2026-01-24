@@ -27,24 +27,6 @@ public class UserServiceImpl implements org.ichwan.service.UserService<User, Use
     @Inject
     private MapperConfig mapper;
 
-    @Override
-    @Transactional
-    public void register(User entity) {
-        if (findByRegnumber(entity.getRegnumber()) != null) {
-            throw new IllegalArgumentException("account already exists");
-        }
-
-        User user = new User();
-        user.setName(entity.getName());
-        user.setRegnumber(entity.getRegnumber());
-        user.setClsroom(entity.getClsroom());
-        user.setGender(entity.getGender());
-        user.setRoles(entity.getRoles());
-        user.setPassword(BcryptUtil.bcryptHash(entity.getPassword()));
-        userRepository.persist(user);
-
-    }
-
     @Transactional
     @Override
     public void update(User entity, Long id) {
@@ -82,20 +64,16 @@ public class UserServiceImpl implements org.ichwan.service.UserService<User, Use
     }
 
     @Override
-    public List<User> findByClsroomAndRoles(String classroom, String roles) {
-        return userRepository.findByClsroomAndRoles(classroom, roles);
+    public List<UserResponse> findByClsroomAndRoles(String classroom, String roles) {
+        List<User> byClsroomAndRoles = userRepository.findByClsroomAndRoles(classroom, roles);
+        return mapper.mapList(byClsroomAndRoles, UserResponse.class);
     }
 
     @CacheResult(cacheName = "usersByRoles", lockTimeout = 3000)
     @Override
-    public List<User> findByRoles(String roles) {
-        return userRepository.findByRoles(UserRole.valueOf(roles.toUpperCase()));
-    }
-
-    @Override
-    public boolean authenticate(String rawPassword, String regNumber) {
-
-        return BcryptUtil.matches(rawPassword, userRepository.findByRegnumber(regNumber).getPassword());
+    public List<UserResponse> findByRoles(String roles) {
+        List<User> byRoles = userRepository.findByRoles(UserRole.valueOf(roles.toUpperCase()));
+        return mapper.mapList(byRoles, UserResponse.class);
     }
 
     @CacheInvalidate(cacheName = "usersByRoles")
@@ -105,13 +83,4 @@ public class UserServiceImpl implements org.ichwan.service.UserService<User, Use
         userRepository.deleteById(id);
     }
 
-    public String generateAccessToken(UserResponse user) {
-        return Jwt
-                .issuer("report-alkarim-issuer")
-                .subject(String.valueOf(user.regnumber()))
-                .upn(user.name())
-                .groups(Set.of(user.roles().name()))
-                .expiresAt(Instant.now().plus(1, ChronoUnit.HOURS))
-                .sign();
-    }
 }

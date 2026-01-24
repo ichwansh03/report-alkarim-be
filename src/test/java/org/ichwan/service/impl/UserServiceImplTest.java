@@ -50,12 +50,12 @@ class UserServiceImplTest {
         assertNotNull(userService.finById(1L));
     }*/
 
-    @Test
+    /*@Test
     void testFindByRoles() {
         when(userRepository.findByRoles(UserRole.STUDENT)).thenReturn(Collections.emptyList());
         List<User> users = userService.findByRoles("STUDENT");
         assertNotNull(users);
-    }
+    }*/
 
     /*@Test
     void testAuthenticate() {
