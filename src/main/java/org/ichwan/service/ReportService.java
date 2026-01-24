@@ -2,11 +2,11 @@ package org.ichwan.service;
 
 import java.util.List;
 
-public interface ReportService<E> {
+public interface ReportService<E, R> {
 
-    List<E> getReportsByRegnumber(String regnumber);
+    List<R> getReportsByRegnumber(String regnumber);
 
-    List<E> getReportsByUserName(String name);
+    List<R> getReportsByUserName(String name);
 
     E getReportById(Long id);
 

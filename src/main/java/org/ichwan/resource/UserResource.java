@@ -42,7 +42,7 @@ public class UserResource {
     }
 
     @GET
-    @Path("/user/{regnumber}")
+    @Path("/{regnumber}")
     @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response getUserByRegnumber(@PathParam("regnumber") String regnumber) {
         UserResponse user = userService.findByRegnumber(regnumber);
@@ -60,7 +60,7 @@ public class UserResource {
     }
 
     @DELETE
-    @Path("/user/delete/{id}")
+    @Path("/delete/{id}")
     @RolesAllowed("ADMINISTRATOR")
     public Response deleteUser(@PathParam("id") Long id) {
         userService.deleteUser(id);
