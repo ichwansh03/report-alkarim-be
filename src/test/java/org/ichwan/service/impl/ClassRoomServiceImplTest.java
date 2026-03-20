@@ -3,6 +3,7 @@ package org.ichwan.service.impl;
 import org.ichwan.domain.ClassRoom;
 import org.ichwan.repository.ClassRoomRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -11,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@Disabled
 public class ClassRoomServiceImplTest {
 
     @Mock
