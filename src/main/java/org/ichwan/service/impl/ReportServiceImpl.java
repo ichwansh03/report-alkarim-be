@@ -6,30 +6,37 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.ichwan.domain.Report;
+import org.ichwan.dto.ReportResponse;
 import org.ichwan.repository.ReportRepository;
 import org.ichwan.repository.UserRepository;
 import org.ichwan.service.ReportService;
+import org.ichwan.util.MapperConfig;
 
 import java.util.List;
 
 @ApplicationScoped
-public class ReportServiceImpl implements ReportService<Report> {
+public class ReportServiceImpl implements ReportService<Report, ReportResponse> {
 
     @Inject
     private ReportRepository repository;
     @Inject
     UserRepository userRepository;
+    @Inject
+    private MapperConfig mapper;
 
     @CacheResult(cacheName = "reports", lockTimeout = 3000)
     @Override
-    public List<Report> getReportsByRegnumber(String regnumber) {
-        return repository.findByUserRegnumber(regnumber);
+    public List<ReportResponse> getReportsByRegnumber(String regnumber) {
+        List<Report> byUserRegnumber = repository.findByUserRegnumber(regnumber);
+
+        return mapper.mapList(byUserRegnumber, ReportResponse.class);
     }
 
     @CacheResult(cacheName = "reports", lockTimeout = 3000)
     @Override
-    public List<Report> getReportsByUserName(String name) {
-        return repository.findByUserName(name);
+    public List<ReportResponse> getReportsByUserName(String name) {
+        List<Report> byUserName = repository.findByUserName(name);
+        return mapper.mapList(byUserName, ReportResponse.class);
     }
 
     @Override
