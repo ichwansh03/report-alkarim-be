@@ -6,6 +6,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.ichwan.domain.Category;
+import org.ichwan.exceptions.ConflictException;
+import org.ichwan.exceptions.NotFoundException;
 import org.ichwan.repository.CategoryRepository;
 
 import java.util.List;
@@ -23,15 +25,20 @@ public class CategoryServiceImpl {
 
     @Transactional
     public void createCategory(String name) {
+        boolean exists = repository.find("name", name).firstResultOptional().isPresent();
+        if (exists) {
+            throw new ConflictException("Category with name '" + name + "' already exists");
+        }
+
         repository.persistAndFlush(new Category(name));
     }
 
     @CacheInvalidate(cacheName = "allCategories")
     @Transactional
     public void deleteCategory(Long id) {
-        Category category = repository.findById(id);
-        if (category != null) {
-            repository.delete(category);
-        }
+        Category category = repository.findByIdOptional(id)
+                .orElseThrow(() -> new NotFoundException("Category with id " + id + " not found"));
+
+        repository.delete(category);
     }
 }

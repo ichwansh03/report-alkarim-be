@@ -7,12 +7,15 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.ichwan.domain.User;
 import org.ichwan.dto.UserResponse;
+import org.ichwan.exceptions.ConflictException;
+import org.ichwan.exceptions.NotFoundException;
 import org.ichwan.repository.UserRepository;
 import org.ichwan.service.AuthService;
 import org.ichwan.util.MapperConfig;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 import java.util.Set;
 
 @ApplicationScoped
@@ -28,7 +31,7 @@ public class AuthServiceImpl implements AuthService<User> {
     @Transactional
     public void register(User entity) {
         if (userRepository.findByRegnumber(entity.getRegnumber()) != null) {
-            throw new IllegalArgumentException("account already exists");
+            throw new ConflictException("Account with registration number '" + entity.getRegnumber() + "' already exists");
         }
 
         User user = new User();
@@ -43,8 +46,10 @@ public class AuthServiceImpl implements AuthService<User> {
 
     @Override
     public boolean authenticate(String rawPassword, String regNumber) {
+        User user = Optional.ofNullable(userRepository.findByRegnumber(regNumber))
+                .orElseThrow(() -> new NotFoundException("Account with registration number '" + regNumber + "' not found"));
 
-        return BcryptUtil.matches(rawPassword, userRepository.findByRegnumber(regNumber).getPassword());
+        return BcryptUtil.matches(rawPassword, user.getPassword());
     }
 
     public String generateAccessToken(UserResponse user) {
