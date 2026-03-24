@@ -32,16 +32,13 @@ public class AuthResource {
     @Path("/test")
     @RolesAllowed({"TEACHER","ADMINISTRATOR"})
     public Response testAuth() {
-        return Response.ok("Authentication successful").build();
+        return Response.ok(ApiResponse.ok("test success")).build();
     }
 
     @POST
     @Path("/register")
     @PermitAll
     public Response register(AuthRequest req) {
-        if (req.regnumber() == null || req.password() == null) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("NISN/NIP dan password salah").build();
-        }
 
         User u = new User();
         u.setName(req.name());
@@ -52,7 +49,7 @@ public class AuthResource {
         u.setPassword(req.password());
 
         authService.register(u);
-        return Response.status(Response.Status.CREATED).entity("user created").build();
+        return Response.status(Response.Status.CREATED).entity(ApiResponse.created("User Created")).build();
     }
 
     @POST
@@ -65,7 +62,7 @@ public class AuthResource {
             return Response.status(Response.Status.UNAUTHORIZED).entity("invalid email or password").build();
         }
 
-        return Response.ok(new AuthResponse(req.regnumber(), authService.generateAccessToken(user), user)).build();
+        return Response.ok(ApiResponse.ok("Successfully login", new AuthResponse(req.regnumber(), authService.generateAccessToken(user), user))).build();
     }
 
     @POST
