@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @ApplicationScoped
-public class AuthServiceImpl implements AuthService<User> {
+public class AuthServiceImpl implements AuthService {
 
     @Inject
     private UserRepository userRepository;
@@ -53,6 +53,7 @@ public class AuthServiceImpl implements AuthService<User> {
         return BcryptUtil.matches(rawPassword, user.getPassword());
     }
 
+    @Override
     public String generateAccessToken(UserResponse user) {
         return Jwt
                 .issuer("report-alkarim-issuer")

@@ -6,10 +6,9 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import org.ichwan.domain.RefreshToken;
-import org.ichwan.domain.User;
 import org.ichwan.dto.*;
+import org.ichwan.service.AuthService;
 import org.ichwan.service.UserService;
-import org.ichwan.service.impl.AuthServiceImpl;
 import org.ichwan.util.RefreshTokenService;
 
 import java.util.Optional;
@@ -20,7 +19,7 @@ import java.util.Optional;
 public class AuthResource {
 
     @Inject
-    private AuthServiceImpl authService;
+    private AuthService authService;
 
     @Inject
     private UserService userService;
@@ -40,7 +39,7 @@ public class AuthResource {
     @PermitAll
     public Response register(AuthRequest req) {
         authService.register(req);
-        return Response.status(Response.Status.CREATED).entity(ApiResponse.created("User Created")).build();
+        return Response.status(Response.Status.CREATED).entity(ApiResponse.created("User Created", req)).build();
     }
 
     @POST
