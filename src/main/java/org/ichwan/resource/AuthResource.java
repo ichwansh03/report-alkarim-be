@@ -8,8 +8,8 @@ import jakarta.ws.rs.core.Response;
 import org.ichwan.domain.RefreshToken;
 import org.ichwan.domain.User;
 import org.ichwan.dto.*;
+import org.ichwan.service.UserService;
 import org.ichwan.service.impl.AuthServiceImpl;
-import org.ichwan.service.impl.UserServiceImpl;
 import org.ichwan.util.RefreshTokenService;
 
 import java.util.Optional;
@@ -23,7 +23,7 @@ public class AuthResource {
     private AuthServiceImpl authService;
 
     @Inject
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @Inject
     private RefreshTokenService tokenService;
@@ -39,16 +39,7 @@ public class AuthResource {
     @Path("/register")
     @PermitAll
     public Response register(AuthRequest req) {
-
-        User u = new User();
-        u.setName(req.name());
-        u.setRegnumber(req.regnumber());
-        u.setClsroom(req.clsroom());
-        u.setGender(req.gender());
-        u.setRoles(req.roles());
-        u.setPassword(req.password());
-
-        authService.register(u);
+        authService.register(req);
         return Response.status(Response.Status.CREATED).entity(ApiResponse.created("User Created")).build();
     }
 

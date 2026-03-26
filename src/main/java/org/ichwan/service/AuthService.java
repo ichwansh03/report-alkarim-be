@@ -1,8 +1,10 @@
 package org.ichwan.service;
 
-public interface AuthService<E> {
+import org.ichwan.dto.AuthRequest;
 
-    void register(E entity);
+public interface AuthService {
+
+    void register(AuthRequest entity);
 
     boolean authenticate(String rawPassword, String passwordHash);
 }

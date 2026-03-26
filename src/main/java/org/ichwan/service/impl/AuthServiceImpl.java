@@ -6,6 +6,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.ichwan.domain.User;
+import org.ichwan.dto.AuthRequest;
 import org.ichwan.dto.UserResponse;
 import org.ichwan.exceptions.ConflictException;
 import org.ichwan.exceptions.NotFoundException;
@@ -29,18 +30,18 @@ public class AuthServiceImpl implements AuthService<User> {
 
     @Override
     @Transactional
-    public void register(User entity) {
-        if (userRepository.findByRegnumber(entity.getRegnumber()) != null) {
-            throw new ConflictException("Account with registration number '" + entity.getRegnumber() + "' already exists");
+    public void register(AuthRequest req) {
+        if (userRepository.findByRegnumber(req.regnumber()) != null) {
+            throw new ConflictException("Account with registration number '" + req.regnumber() + "' already exists");
         }
 
         User user = new User();
-        user.setName(entity.getName());
-        user.setRegnumber(entity.getRegnumber());
-        user.setClsroom(entity.getClsroom());
-        user.setGender(entity.getGender());
-        user.setRoles(entity.getRoles());
-        user.setPassword(BcryptUtil.bcryptHash(entity.getPassword()));
+        user.setName(req.name());
+        user.setRegnumber(req.regnumber());
+        user.setClsroom(req.clsroom());
+        user.setGender(req.gender());
+        user.setRoles(req.roles());
+        user.setPassword(BcryptUtil.bcryptHash(req.password()));
         userRepository.persist(user);
     }
 
