@@ -47,7 +47,7 @@ public class AuthResource {
     @PermitAll
     public Response login(AuthRequest req) {
         UserResponse user = userService.findByRegnumber(req.regnumber());
-        if (user == null || !authService.authenticate(req.password(), user.regnumber())) {
+        if (user == null || !authService.authenticate(req.password(), user.getRegnumber())) {
 
             return Response.status(Response.Status.UNAUTHORIZED).entity("invalid email or password").build();
         }
@@ -74,7 +74,7 @@ public class AuthResource {
 
         RefreshToken oldRt = storedRt.get();
         UserResponse byId = userService.findById(oldRt.getUserId());
-        String newAccessToken = tokenService.generateNewToken(byId.regnumber());
+        String newAccessToken = tokenService.generateNewToken(byId.getRegnumber());
 
         RefreshToken newRt = tokenService.changeToken(oldRt);
 

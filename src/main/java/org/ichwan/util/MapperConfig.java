@@ -3,6 +3,7 @@ package org.ichwan.util;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.config.Configuration;
 import org.modelmapper.convention.MatchingStrategies;
 
 import java.util.List;
@@ -19,16 +20,16 @@ public class MapperConfig {
 
         // Configuration
         modelMapper.getConfiguration()
-                .setMatchingStrategy(MatchingStrategies.STRICT)
-                .setSkipNullEnabled(true)
-                .setAmbiguityIgnored(false);
+                .setMatchingStrategy(MatchingStrategies.STANDARD)
+                .setFieldMatchingEnabled(true)
+                .setFieldAccessLevel(Configuration.AccessLevel.PRIVATE);
 
         // Custom mappings
         configureCustomMappings();
     }
 
     private void configureCustomMappings() {
-        // Add custom mappings here jika diperlukan
+        // Add custom mappings here if needed
         // Example:
         // modelMapper.typeMap(User.class, UserDTO.class)
         //     .addMapping(User::getFullName, UserDTO::setName);
