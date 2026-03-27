@@ -24,8 +24,8 @@ public class RefreshTokenService {
     @Inject
     private UserServiceImpl userService;
 
-    public String generateNewToken(Long userId) {
-        return authService.generateAccessToken(userService.findById(userId));
+    public String generateNewToken(String regnumber) {
+        return authService.generateAccessToken(regnumber);
     }
 
     public RefreshToken createRefreshToken(Long userId) {

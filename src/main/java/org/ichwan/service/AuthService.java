@@ -1,7 +1,6 @@
 package org.ichwan.service;
 
 import org.ichwan.dto.AuthRequest;
-import org.ichwan.dto.UserResponse;
 
 public interface AuthService {
 
@@ -9,5 +8,5 @@ public interface AuthService {
 
     boolean authenticate(String rawPassword, String passwordHash);
 
-    String generateAccessToken(UserResponse user);
+    String generateAccessToken(String regnumber);
 }

@@ -7,7 +7,6 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.ichwan.domain.User;
 import org.ichwan.dto.AuthRequest;
-import org.ichwan.dto.UserResponse;
 import org.ichwan.exceptions.ConflictException;
 import org.ichwan.exceptions.NotFoundException;
 import org.ichwan.repository.UserRepository;
@@ -54,12 +53,13 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public String generateAccessToken(UserResponse user) {
+    public String generateAccessToken(String regnumber){
+        User user = userRepository.findByRegnumber(regnumber);
         return Jwt
                 .issuer("report-alkarim-issuer")
-                .subject(String.valueOf(user.regnumber()))
-                .upn(user.name())
-                .groups(Set.of(user.roles().name()))
+                .subject(String.valueOf(user.getRegnumber()))
+                .upn(user.getName())
+                .groups(Set.of(user.getRoles().name()))
                 .expiresAt(Instant.now().plus(1, ChronoUnit.HOURS))
                 .sign();
     }

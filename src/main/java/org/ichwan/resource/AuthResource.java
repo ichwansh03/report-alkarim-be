@@ -52,7 +52,7 @@ public class AuthResource {
             return Response.status(Response.Status.UNAUTHORIZED).entity("invalid email or password").build();
         }
 
-        return Response.ok(ApiResponse.ok("Successfully login", new AuthResponse(req.regnumber(), authService.generateAccessToken(user), user))).build();
+        return Response.ok(ApiResponse.ok("Successfully login", new AuthResponse(req.regnumber(), authService.generateAccessToken(req.regnumber()), user))).build();
     }
 
     @POST
@@ -73,7 +73,8 @@ public class AuthResource {
         }
 
         RefreshToken oldRt = storedRt.get();
-        String newAccessToken = tokenService.generateNewToken(oldRt.getUserId());
+        UserResponse byId = userService.findById(oldRt.getUserId());
+        String newAccessToken = tokenService.generateNewToken(byId.regnumber());
 
         RefreshToken newRt = tokenService.changeToken(oldRt);
 
