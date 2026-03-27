@@ -6,7 +6,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.ichwan.domain.User;
-import org.ichwan.dto.UserResponse;
+import org.ichwan.dto.AuthRequest;
 import org.ichwan.exceptions.ConflictException;
 import org.ichwan.exceptions.NotFoundException;
 import org.ichwan.repository.UserRepository;
@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @ApplicationScoped
-public class AuthServiceImpl implements AuthService<User> {
+public class AuthServiceImpl implements AuthService {
 
     @Inject
     private UserRepository userRepository;
@@ -29,18 +29,18 @@ public class AuthServiceImpl implements AuthService<User> {
 
     @Override
     @Transactional
-    public void register(User entity) {
-        if (userRepository.findByRegnumber(entity.getRegnumber()) != null) {
-            throw new ConflictException("Account with registration number '" + entity.getRegnumber() + "' already exists");
+    public void register(AuthRequest req) {
+        if (userRepository.findByRegnumber(req.regnumber()) != null) {
+            throw new ConflictException("Account with registration number '" + req.regnumber() + "' already exists");
         }
 
         User user = new User();
-        user.setName(entity.getName());
-        user.setRegnumber(entity.getRegnumber());
-        user.setClsroom(entity.getClsroom());
-        user.setGender(entity.getGender());
-        user.setRoles(entity.getRoles());
-        user.setPassword(BcryptUtil.bcryptHash(entity.getPassword()));
+        user.setName(req.name());
+        user.setRegnumber(req.regnumber());
+        user.setClsroom(req.clsroom());
+        user.setGender(req.gender());
+        user.setRoles(req.roles());
+        user.setPassword(BcryptUtil.bcryptHash(req.password()));
         userRepository.persist(user);
     }
 
@@ -52,12 +52,14 @@ public class AuthServiceImpl implements AuthService<User> {
         return BcryptUtil.matches(rawPassword, user.getPassword());
     }
 
-    public String generateAccessToken(UserResponse user) {
+    @Override
+    public String generateAccessToken(String regnumber){
+        User user = userRepository.findByRegnumber(regnumber);
         return Jwt
                 .issuer("report-alkarim-issuer")
-                .subject(String.valueOf(user.regnumber()))
-                .upn(user.name())
-                .groups(Set.of(user.roles().name()))
+                .subject(String.valueOf(user.getRegnumber()))
+                .upn(user.getName())
+                .groups(Set.of(user.getRoles().name()))
                 .expiresAt(Instant.now().plus(1, ChronoUnit.HOURS))
                 .sign();
     }

@@ -6,10 +6,9 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import org.ichwan.domain.RefreshToken;
-import org.ichwan.domain.User;
 import org.ichwan.dto.*;
-import org.ichwan.service.impl.AuthServiceImpl;
-import org.ichwan.service.impl.UserServiceImpl;
+import org.ichwan.service.AuthService;
+import org.ichwan.service.UserService;
 import org.ichwan.util.RefreshTokenService;
 
 import java.util.Optional;
@@ -20,10 +19,10 @@ import java.util.Optional;
 public class AuthResource {
 
     @Inject
-    private AuthServiceImpl authService;
+    private AuthService authService;
 
     @Inject
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @Inject
     private RefreshTokenService tokenService;
@@ -39,17 +38,8 @@ public class AuthResource {
     @Path("/register")
     @PermitAll
     public Response register(AuthRequest req) {
-
-        User u = new User();
-        u.setName(req.name());
-        u.setRegnumber(req.regnumber());
-        u.setClsroom(req.clsroom());
-        u.setGender(req.gender());
-        u.setRoles(req.roles());
-        u.setPassword(req.password());
-
-        authService.register(u);
-        return Response.status(Response.Status.CREATED).entity(ApiResponse.created("User Created")).build();
+        authService.register(req);
+        return Response.status(Response.Status.CREATED).entity(ApiResponse.created("User Created", req)).build();
     }
 
     @POST
@@ -57,12 +47,12 @@ public class AuthResource {
     @PermitAll
     public Response login(AuthRequest req) {
         UserResponse user = userService.findByRegnumber(req.regnumber());
-        if (user == null || !authService.authenticate(req.password(), user.regnumber())) {
+        if (user == null || !authService.authenticate(req.password(), user.getRegnumber())) {
 
             return Response.status(Response.Status.UNAUTHORIZED).entity("invalid email or password").build();
         }
 
-        return Response.ok(ApiResponse.ok("Successfully login", new AuthResponse(req.regnumber(), authService.generateAccessToken(user), user))).build();
+        return Response.ok(ApiResponse.ok("Successfully login", new AuthResponse(req.regnumber(), authService.generateAccessToken(req.regnumber()), user))).build();
     }
 
     @POST
@@ -83,7 +73,8 @@ public class AuthResource {
         }
 
         RefreshToken oldRt = storedRt.get();
-        String newAccessToken = tokenService.generateNewToken(oldRt.getUserId());
+        UserResponse byId = userService.findById(oldRt.getUserId());
+        String newAccessToken = tokenService.generateNewToken(byId.getRegnumber());
 
         RefreshToken newRt = tokenService.changeToken(oldRt);
 

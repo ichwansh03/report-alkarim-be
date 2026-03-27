@@ -4,10 +4,9 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
-import org.ichwan.domain.User;
-import org.ichwan.dto.AuthRequest;
+import org.ichwan.dto.UserRequest;
 import org.ichwan.dto.UserResponse;
-import org.ichwan.service.impl.UserServiceImpl;
+import org.ichwan.service.UserService;
 
 @Path("/user")
 @Consumes("application/json")
@@ -15,22 +14,13 @@ import org.ichwan.service.impl.UserServiceImpl;
 public class UserResource {
 
     @Inject
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @PUT
     @Path("/update/{id}")
     @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
-    public Response update(Long id, AuthRequest req) {
-        User u = userService.findEntityById(id);
-        if (u == null) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("User tidak ditemukan").build();
-        }
-        u.setName(req.name());
-        u.setClsroom(req.clsroom());
-        u.setGender(req.gender());
-        u.setRoles(req.roles());
-        u.setPassword(req.password());
-        userService.update(u, id);
+    public Response update(Long id, UserRequest req) {
+        userService.update(req, id);
         return Response.ok("user updated").build();
     }
 
@@ -66,4 +56,14 @@ public class UserResource {
         userService.deleteUser(id);
         return Response.ok("user deleted").build();
     }
+
+    @GET
+    @RolesAllowed({"TEACHER", "ADMINISTRATOR"})
+    public Response getAll(
+            @QueryParam("page") @DefaultValue("0") int page,
+            @QueryParam("size") @DefaultValue("10") int size
+    ) {
+        return Response.ok(userService.getAll(page, size)).build();
+    }
+
 }

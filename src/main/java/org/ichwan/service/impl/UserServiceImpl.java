@@ -2,30 +2,30 @@ package org.ichwan.service.impl;
 
 import io.quarkus.cache.CacheInvalidate;
 import io.quarkus.cache.CacheResult;
-import io.quarkus.elytron.security.common.BcryptUtil;
-import io.smallrye.jwt.build.Jwt;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.ichwan.domain.User;
+import org.ichwan.dto.PageResponse;
+import org.ichwan.dto.UserRequest;
 import org.ichwan.dto.UserResponse;
 import org.ichwan.exceptions.BadRequestException;
 import org.ichwan.exceptions.ConflictException;
 import org.ichwan.exceptions.NotFoundException;
 import org.ichwan.repository.UserRepository;
+import org.ichwan.service.UserService;
 import org.ichwan.util.MapperConfig;
 import org.ichwan.util.UserRole;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
-public class UserServiceImpl implements org.ichwan.service.UserService<User, UserResponse> {
+public class UserServiceImpl implements UserService {
 
     @Inject
     private UserRepository userRepository;
@@ -35,26 +35,22 @@ public class UserServiceImpl implements org.ichwan.service.UserService<User, Use
 
     @Transactional
     @Override
-    public void update(User entity, Long id) {
+    public void update(UserRequest req, Long id) {
         User user = userRepository.findByIdOptional(id)
                 .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
 
-        // Check if the new regnumber conflicts with another existing user
-        Optional.ofNullable(userRepository.findByRegnumber(entity.getRegnumber()))
+        Optional.ofNullable(userRepository.findByRegnumber(req.regnumber()))
                 .ifPresent(existing -> {
                     if (!existing.getId().equals(id)) {
-                        throw new ConflictException("Registration number '" + entity.getRegnumber() + "' already exists");
+                        throw new ConflictException("Registration number '" + req.regnumber() + "' already exists");
                     }
                 });
 
-        user.setName(entity.getName());
-        user.setClsroom(entity.getClsroom());
-        user.setGender(entity.getGender());
-        user.setRegnumber(entity.getRegnumber());
-        user.setRoles(entity.getRoles());
-        if (entity.getPassword() != null && !entity.getPassword().isEmpty()) {
-            user.setPassword(BcryptUtil.bcryptHash(entity.getPassword()));
-        }
+        user.setName(req.name());
+        user.setClsroom(req.clsroom());
+        user.setGender(req.gender());
+        user.setRegnumber(req.regnumber());
+        user.setRoles(req.roles());
         userRepository.persist(user);
     }
 
@@ -62,14 +58,6 @@ public class UserServiceImpl implements org.ichwan.service.UserService<User, Use
     public UserResponse findByRegnumber(String regnumber) {
         User user = Optional.ofNullable(userRepository.findByRegnumber(regnumber))
                 .orElseThrow(() -> new NotFoundException("User with registration number '" + regnumber + "' not found"));
-
-        return mapper.map(user, UserResponse.class);
-    }
-
-    @Override
-    public UserResponse finById(Long id) {
-        User user = userRepository.findByIdOptional(id)
-                .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
 
         return mapper.map(user, UserResponse.class);
     }
@@ -131,6 +119,32 @@ public class UserServiceImpl implements org.ichwan.service.UserService<User, Use
                 .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
 
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public UserResponse findById(Long id) {
+        User user = userRepository.findByIdOptional(id)
+                .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
+
+        return mapper.map(user, UserResponse.class);
+    }
+
+    @Override
+    public PageResponse<UserResponse> getAll(int page, int size) {
+        PanacheQuery<User> query = userRepository.findAll();
+        query.page(Page.of(page, size));
+
+        List<User> users = query.list();
+        if (users.isEmpty()) {
+            throw new NotFoundException("No users found");
+        }
+
+        long totalItems = query.count();
+        int totalPages = (int) Math.ceil((double) totalItems / size);
+
+        List<UserResponse> data = mapper.mapList(users, UserResponse.class);
+
+        return new PageResponse<>(data, page, size, totalItems, totalPages);
     }
 
 }

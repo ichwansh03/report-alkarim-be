@@ -1,22 +1,22 @@
 package org.ichwan.service;
 
 import org.ichwan.domain.User;
+import org.ichwan.dto.UserRequest;
+import org.ichwan.dto.UserResponse;
 
 import java.util.List;
 
-public interface UserService<E, R> {
+public interface UserService extends BaseService<UserResponse> {
 
-    void update(E entity, Long id);
+    void update(UserRequest entity, Long id);
 
-    R findByRegnumber(String regnumber);
+    UserResponse findByRegnumber(String regnumber);
 
-    R finById(Long id);
+    User findEntityById(Long id);
 
-    E findEntityById(Long id);
+    List<UserResponse> findByClsroomAndRoles(String classroom, String roles);
 
-    List<R> findByClsroomAndRoles(String classroom, String roles);
-
-    List<R> findByRoles(String roles);
+    List<UserResponse> findByRoles(String roles);
 
     void deleteUser(Long id);
 }
