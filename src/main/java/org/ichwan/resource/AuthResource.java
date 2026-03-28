@@ -52,7 +52,7 @@ public class AuthResource {
             return Response.status(Response.Status.UNAUTHORIZED).entity("invalid email or password").build();
         }
 
-        return Response.ok(ApiResponse.ok("Successfully login", new AuthResponse(req.regnumber(), authService.generateAccessToken(req.regnumber()), user))).build();
+        return Response.ok(ApiResponse.ok("Successfully login", new AuthResponse(authService.generateAccessToken(req.regnumber()), user))).build();
     }
 
     @POST
