@@ -104,6 +104,9 @@ Easily start your REST Web Services
 [Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
 
 ## API Contract
+<img width="3611" height="2531" alt="erd_student_report_system" src="https://github.com/user-attachments/assets/c81ac125-294b-4acd-9723-2a3118152e6e" />
+
+
 
 ### AuthResource (`/auth`)
 - **POST** `/register`  
