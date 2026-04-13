@@ -7,7 +7,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
-import org.ichwan.dto.ErrorResponse;
+import org.ichwan.dto.response.ErrorResponse;
 
 @Provider
 @Produces(MediaType.APPLICATION_JSON)

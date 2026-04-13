@@ -1,8 +1,6 @@
 package org.ichwan.service;
 
-import org.ichwan.dto.PageResponse;
-
-import java.util.List;
+import org.ichwan.dto.response.PageResponse;
 
 public interface BaseService<E> {
     E findById(Long id);

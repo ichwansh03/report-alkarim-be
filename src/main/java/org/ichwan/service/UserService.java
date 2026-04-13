@@ -1,8 +1,8 @@
 package org.ichwan.service;
 
 import org.ichwan.domain.User;
-import org.ichwan.dto.UserRequest;
-import org.ichwan.dto.UserResponse;
+import org.ichwan.dto.request.UserRequest;
+import org.ichwan.dto.response.UserResponse;
 
 import java.util.List;
 

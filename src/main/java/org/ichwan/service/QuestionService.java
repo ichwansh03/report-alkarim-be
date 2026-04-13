@@ -1,21 +1,22 @@
 package org.ichwan.service;
 
 
+import org.ichwan.dto.request.QuestionRequest;
+import org.ichwan.dto.response.QuestionResponse;
+
 import java.util.List;
 
-public interface QuestionService<E> {
+public interface QuestionService extends BaseService<QuestionResponse> {
 
-    void createQuestion(E entity);
+    void createQuestion(QuestionRequest entity);
 
-    E getQuestionById(Long id);
+    List<QuestionResponse> getQuestionByTarget(String target);
 
-    List<E> getQuestionByTarget(String target);
+    List<QuestionResponse> getQuestionByCategory(String category);
 
-    List<E> getQuestionByCategory(String category);
+    List<QuestionResponse> getQuestionByCategoryAndTarget(String category, String target);
 
-    List<E> getQuestionByCategoryAndTarget(String category, String target);
-
-    void updateQuestion(E entity, Long id);
+    void updateQuestion(QuestionRequest entity, Long id);
 
     void deleteQuestion(Long id);
 }

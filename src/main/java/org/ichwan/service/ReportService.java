@@ -1,18 +1,20 @@
 package org.ichwan.service;
 
+import org.ichwan.domain.Report;
+import org.ichwan.dto.request.ReportRequest;
+import org.ichwan.dto.response.ReportResponse;
+
 import java.util.List;
 
-public interface ReportService<E, R> {
+public interface ReportService extends BaseService<ReportResponse> {
 
-    List<R> getReportsByRegnumber(String regnumber);
+    List<ReportResponse> getReportsByRegnumber(String regnumber);
 
-    List<R> getReportsByUserName(String name);
+    List<ReportResponse> getReportsByUserName(String name);
 
-    E getReportById(Long id);
+    void createReport(ReportRequest entity);
 
-    void createReport(E entity, Long userId);
-
-    void updateReport(E entity, Long id);
+    void updateReport(ReportRequest entity, Long id);
 
     void deleteReport(Long id);
 }

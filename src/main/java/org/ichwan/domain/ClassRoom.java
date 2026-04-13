@@ -1,9 +1,6 @@
 package org.ichwan.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "class_rooms")
@@ -14,7 +11,12 @@ public class ClassRoom extends Auditable {
     private Long id;
     private String name;
     private Integer studentCount;
-    private String teacherName;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "teacher_id")
+    private User teacher;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "level_id", nullable = false)
+    private Level level;
 
     public ClassRoom() {
     }
@@ -43,11 +45,19 @@ public class ClassRoom extends Auditable {
         this.studentCount = studentCount;
     }
 
-    public String getTeacherName() {
-        return teacherName;
+    public User getTeacher() {
+        return teacher;
     }
 
-    public void setTeacherName(String teacherName) {
-        this.teacherName = teacherName;
+    public void setTeacher(User teacher) {
+        this.teacher = teacher;
+    }
+
+    public Level getLevel() {
+        return level;
+    }
+
+    public void setLevel(Level level) {
+        this.level = level;
     }
 }

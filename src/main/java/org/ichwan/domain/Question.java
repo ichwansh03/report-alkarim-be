@@ -11,10 +11,14 @@ public class Question extends Auditable{
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
     private String question;
-    private String category;
-    private String target;
     @Enumerated(EnumType.STRING)
     private AnswerType options;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "class_room_id")
+    private ClassRoom classRoom;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
     public Question() {
     }
@@ -35,27 +39,27 @@ public class Question extends Auditable{
         this.question = question;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getTarget() {
-        return target;
-    }
-
-    public void setTarget(String target) {
-        this.target = target;
-    }
-
     public AnswerType getOptions() {
         return options;
     }
 
     public void setOptions(AnswerType options) {
         this.options = options;
+    }
+
+    public ClassRoom getClassRoom() {
+        return classRoom;
+    }
+
+    public void setClassRoom(ClassRoom classRoom) {
+        this.classRoom = classRoom;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

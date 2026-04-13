@@ -14,11 +14,13 @@ public class User extends Auditable{
     private String name;
     @Column(unique = true, nullable = false)
     private String regnumber;
-    private String clsroom;
     private String gender;
     @Enumerated(EnumType.STRING)
     private UserRole roles;
     private String password;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "class_room_id")
+    private ClassRoom classRoom;
 
     public User() {
     }
@@ -41,14 +43,6 @@ public class User extends Auditable{
 
     public void setRegnumber(String regnumber) {
         this.regnumber = regnumber;
-    }
-
-    public String getClsroom() {
-        return clsroom;
-    }
-
-    public void setClsroom(String clsroom) {
-        this.clsroom = clsroom;
     }
 
     public String getGender() {
@@ -75,13 +69,21 @@ public class User extends Auditable{
         this.password = password;
     }
 
+    public ClassRoom getClassRoom() {
+        return classRoom;
+    }
+
+    public void setClassRoom(ClassRoom classRoom) {
+        this.classRoom = classRoom;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", regnumber='" + regnumber + '\'' +
-                ", clsroom='" + clsroom + '\'' +
+                ", clsroom='" + classRoom + '\'' +
                 ", gender='" + gender + '\'' +
                 ", roles='" + roles + '\'' +
                 ", password='" + password + '\'' +

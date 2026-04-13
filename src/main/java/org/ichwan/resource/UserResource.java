@@ -4,8 +4,8 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
-import org.ichwan.dto.UserRequest;
-import org.ichwan.dto.UserResponse;
+import org.ichwan.dto.request.UserRequest;
+import org.ichwan.dto.response.UserResponse;
 import org.ichwan.service.UserService;
 
 @Path("/user")

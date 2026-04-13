@@ -1,4 +1,4 @@
-package org.ichwan.dto;
+package org.ichwan.dto.response;
 
 public record ApiResponse<T>(
         int status,

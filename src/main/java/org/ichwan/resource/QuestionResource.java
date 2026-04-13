@@ -4,9 +4,8 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
-import org.ichwan.domain.Question;
-import org.ichwan.dto.QuestionRequest;
-import org.ichwan.service.impl.QuestionServiceImpl;
+import org.ichwan.dto.request.QuestionRequest;
+import org.ichwan.service.QuestionService;
 
 @Path("/questions")
 @Consumes("application/json")
@@ -14,18 +13,13 @@ import org.ichwan.service.impl.QuestionServiceImpl;
 public class QuestionResource {
 
     @Inject
-    private QuestionServiceImpl service;
+    private QuestionService service;
 
     @POST
     @Path("/create")
     @RolesAllowed({"TEACHER","ADMINISTRATOR"})
     public Response createQuestion(QuestionRequest question) {
-        Question quest = new Question();
-        quest.setQuestion(question.question());
-        quest.setOptions(question.options());
-        quest.setCategory(question.category());
-        quest.setTarget(question.target());
-        service.createQuestion(quest);
+        service.createQuestion(question);
 
         return Response.status(Response.Status.CREATED).entity("Question created").build();
     }
@@ -55,15 +49,7 @@ public class QuestionResource {
     @Path("/update/{id}")
     @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response updateQuestion(@PathParam("id") Long id, QuestionRequest question) {
-        Question quest = service.getQuestionById(id);
-        if (quest == null) {
-            return Response.status(Response.Status.NOT_FOUND).entity("Question not found").build();
-        }
-        quest.setQuestion(question.question());
-        quest.setOptions(question.options());
-        quest.setCategory(question.category());
-        quest.setTarget(question.target());
-        service.updateQuestion(quest, id);
+        service.updateQuestion(question, id);
         return Response.ok("Question updated").build();
     }
 
@@ -73,5 +59,14 @@ public class QuestionResource {
     public Response deleteQuestion(@PathParam("id") Long id) {
         service.deleteQuestion(id);
         return Response.ok("Question deleted").build();
+    }
+
+    @GET
+    @RolesAllowed("ADMINISTRATOR")
+    public Response getAllQuestions(
+            @QueryParam("page") @DefaultValue("0") int page,
+            @QueryParam("size") @DefaultValue("10") int size
+    ) {
+        return Response.ok(service.getAll(page, size)).build();
     }
 }

@@ -8,12 +8,13 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.ichwan.domain.User;
-import org.ichwan.dto.PageResponse;
-import org.ichwan.dto.UserRequest;
-import org.ichwan.dto.UserResponse;
+import org.ichwan.dto.response.PageResponse;
+import org.ichwan.dto.request.UserRequest;
+import org.ichwan.dto.response.UserResponse;
 import org.ichwan.exceptions.BadRequestException;
 import org.ichwan.exceptions.ConflictException;
 import org.ichwan.exceptions.NotFoundException;
+import org.ichwan.repository.ClassRoomRepository;
 import org.ichwan.repository.UserRepository;
 import org.ichwan.service.UserService;
 import org.ichwan.util.MapperConfig;
@@ -31,6 +32,9 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Inject
+    private ClassRoomRepository classRoomRepository;
+
+    @Inject
     private MapperConfig mapper;
 
     @Transactional
@@ -39,18 +43,18 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByIdOptional(id)
                 .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
 
-        Optional.ofNullable(userRepository.findByRegnumber(req.regnumber()))
+        Optional.ofNullable(userRepository.findByRegnumber(req.regNumber()))
                 .ifPresent(existing -> {
                     if (!existing.getId().equals(id)) {
-                        throw new ConflictException("Registration number '" + req.regnumber() + "' already exists");
+                        throw new ConflictException("Registration number '" + req.regNumber() + "' already exists");
                     }
                 });
 
         user.setName(req.name());
-        user.setClsroom(req.clsroom());
+        user.setClassRoom(classRoomRepository.findById(req.classRoomId()));
         user.setGender(req.gender());
-        user.setRegnumber(req.regnumber());
-        user.setRoles(req.roles());
+        user.setRegnumber(req.regNumber());
+        user.setRoles(req.role());
         userRepository.persist(user);
     }
 

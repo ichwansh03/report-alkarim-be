@@ -1,16 +1,18 @@
 package org.ichwan.service;
 
+import org.ichwan.dto.request.ClassRoomRequest;
+import org.ichwan.dto.response.ClassRoomResponse;
+
 import java.util.List;
 
-public interface ClassRoomService<E> {
+public interface ClassRoomService extends BaseService<ClassRoomResponse> {
 
-    E createClassRoom(E classRoom);
+    void createClassRoom(ClassRoomRequest classRoom);
 
-    E getClassRoomByTeacherName(String teacherName);
+    ClassRoomResponse getClassRoomByTeacherName(String teacherName);
 
-    void updateClassRoom(E classRoom, Long id);
+    void updateClassRoom(ClassRoomRequest classRoom, Long id);
 
     void deleteClassRoom(Long id);
 
-    List<E> getAllClassRooms();
 }

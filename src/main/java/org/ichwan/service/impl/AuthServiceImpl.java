@@ -6,7 +6,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.ichwan.domain.User;
-import org.ichwan.dto.AuthRequest;
+import org.ichwan.dto.request.AuthRequest;
+import org.ichwan.dto.request.UserRequest;
 import org.ichwan.exceptions.ConflictException;
 import org.ichwan.exceptions.NotFoundException;
 import org.ichwan.repository.UserRepository;
@@ -34,13 +35,8 @@ public class AuthServiceImpl implements AuthService {
             throw new ConflictException("Account with registration number '" + req.regnumber() + "' already exists");
         }
 
-        User user = new User();
-        user.setName(req.name());
-        user.setRegnumber(req.regnumber());
-        user.setClsroom(req.clsroom());
-        user.setGender(req.gender());
-        user.setRoles(req.roles());
-        user.setPassword(BcryptUtil.bcryptHash(req.password()));
+        UserRequest userRequest = new UserRequest(req.name(), req.regnumber(), req.gender(), req.roles(), BcryptUtil.bcryptHash(req.password()), req.classRoomId());
+        User user = mapper.mapToEntity(userRequest, User.class);
         userRepository.persist(user);
     }
 

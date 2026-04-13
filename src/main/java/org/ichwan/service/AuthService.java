@@ -1,6 +1,6 @@
 package org.ichwan.service;
 
-import org.ichwan.dto.AuthRequest;
+import org.ichwan.dto.request.AuthRequest;
 
 public interface AuthService {
 

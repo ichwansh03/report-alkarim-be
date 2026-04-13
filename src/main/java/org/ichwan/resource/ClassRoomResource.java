@@ -5,7 +5,8 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import org.ichwan.domain.ClassRoom;
-import org.ichwan.dto.ClassRoomRequest;
+import org.ichwan.dto.request.ClassRoomRequest;
+import org.ichwan.service.ClassRoomService;
 import org.ichwan.service.impl.ClassRoomServiceImpl;
 
 @Path("/class")
@@ -14,13 +15,7 @@ import org.ichwan.service.impl.ClassRoomServiceImpl;
 public class ClassRoomResource {
 
     @Inject
-    ClassRoomServiceImpl classRoomService;
-
-    @GET
-    @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
-    public Response getAllClassRooms() {
-        return Response.ok(classRoomService.getAllClassRooms()).build();
-    }
+    ClassRoomService classRoomService;
 
     @GET
     @Path("/teacher/{teacherName}")
@@ -33,10 +28,7 @@ public class ClassRoomResource {
     @Path("/create")
     @RolesAllowed("ADMINISTRATOR")
     public Response createClassRoom(ClassRoomRequest request) {
-        ClassRoom classRoom = new ClassRoom();
-        classRoom.setName(request.name());
-        classRoom.setTeacherName(request.teacherId());
-        classRoomService.createClassRoom(classRoom);
+        classRoomService.createClassRoom(request);
         return Response.status(Response.Status.CREATED).entity("ClassRoom created").build();
     }
 
@@ -44,10 +36,7 @@ public class ClassRoomResource {
     @Path("/update/{id}")
     @RolesAllowed("ADMINISTRATOR")
     public Response updateClassRoom(@PathParam("id") Long id, ClassRoomRequest request) {
-        ClassRoom classRoom = new ClassRoom();
-        classRoom.setName(request.name());
-        classRoom.setTeacherName(request.teacherId());
-        classRoomService.updateClassRoom(classRoom, id);
+        classRoomService.updateClassRoom(request, id);
         return Response.ok("ClassRoom updated").build();
     }
 
@@ -57,5 +46,14 @@ public class ClassRoomResource {
     public Response deleteClassRoom(@PathParam("id") Long id) {
         classRoomService.deleteClassRoom(id);
         return Response.ok("ClassRoom deleted").build();
+    }
+
+    @GET
+    @RolesAllowed("ADMINISTRATOR")
+    public Response getAllClassRoom(
+            @QueryParam("page") @DefaultValue("0") int page,
+            @QueryParam("size") @DefaultValue("10") int size
+    ) {
+        return Response.ok(classRoomService.getAll(page, size)).build();
     }
 }
