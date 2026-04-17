@@ -2,6 +2,7 @@ package org.ichwan.service.impl;
 
 import io.quarkus.cache.CacheInvalidate;
 import io.quarkus.cache.CacheResult;
+import io.quarkus.elytron.security.common.BcryptUtil;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -58,18 +59,22 @@ public class UserServiceImpl implements UserService {
         userRepository.persist(user);
     }
 
+    @CacheInvalidate(cacheName = "usersByRoles")
+    @Transactional
+    @Override
+    public void delete(Long id) {
+        userRepository.findByIdOptional(id)
+                .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
+
+        userRepository.deleteById(id);
+    }
+
     @Override
     public UserResponse findByRegnumber(String regnumber) {
         User user = Optional.ofNullable(userRepository.findByRegnumber(regnumber))
                 .orElseThrow(() -> new NotFoundException("User with registration number '" + regnumber + "' not found"));
 
         return mapper.map(user, UserResponse.class);
-    }
-
-    @Override
-    public User findEntityById(Long id) {
-        return userRepository.findByIdOptional(id)
-                .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
     }
 
     @Override
@@ -115,16 +120,6 @@ public class UserServiceImpl implements UserService {
         return mapper.mapList(users, UserResponse.class);
     }
 
-    @CacheInvalidate(cacheName = "usersByRoles")
-    @Transactional
-    @Override
-    public void deleteUser(Long id) {
-        userRepository.findByIdOptional(id)
-                .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
-
-        userRepository.deleteById(id);
-    }
-
     @Override
     public UserResponse findById(Long id) {
         User user = userRepository.findByIdOptional(id)
@@ -149,6 +144,18 @@ public class UserServiceImpl implements UserService {
         List<UserResponse> data = mapper.mapList(users, UserResponse.class);
 
         return new PageResponse<>(data, page, size, totalItems, totalPages);
+    }
+
+    @Transactional
+    @Override
+    public void create(UserRequest req) {
+        if (userRepository.findByRegnumber(req.regNumber()) != null) {
+            throw new ConflictException("Account with registration number '" + req.regNumber() + "' already exists");
+        }
+
+        UserRequest userRequest = new UserRequest(req.name(), req.regNumber(), req.gender(), req.role(), BcryptUtil.bcryptHash(req.password()), req.classRoomId());
+        User user = mapper.mapToEntity(userRequest, User.class);
+        userRepository.persist(user);
     }
 
 }

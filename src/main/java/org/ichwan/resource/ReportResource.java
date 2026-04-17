@@ -19,7 +19,7 @@ public class ReportResource {
     @Path("/create")
     @RolesAllowed({"TEACHER","ADMINISTRATOR"})
     public Response createReport(ReportRequest request) {
-        reportService.createReport(request);
+        reportService.create(request);
         return Response.status(Response.Status.CREATED).entity("report created").build();
     }
 
@@ -41,7 +41,7 @@ public class ReportResource {
     @Path("/update/{id}")
     @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response updateReport(@PathParam("id") Long id, ReportRequest request) {
-        reportService.updateReport(request, id);
+        reportService.update(request, id);
         return Response.ok("report updated").build();
     }
 
@@ -49,7 +49,7 @@ public class ReportResource {
     @Path("/delete/{id}")
     @RolesAllowed({"TEACHER","ADMINISTRATOR"})
     public Response deleteReport(@PathParam("id") Long id) {
-        reportService.deleteReport(id);
+        reportService.delete(id);
         return Response.ok("report deleted").build();
     }
 

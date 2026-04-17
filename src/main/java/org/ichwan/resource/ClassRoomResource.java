@@ -4,10 +4,8 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
-import org.ichwan.domain.ClassRoom;
 import org.ichwan.dto.request.ClassRoomRequest;
 import org.ichwan.service.ClassRoomService;
-import org.ichwan.service.impl.ClassRoomServiceImpl;
 
 @Path("/class")
 @Produces("application/json")
@@ -28,7 +26,7 @@ public class ClassRoomResource {
     @Path("/create")
     @RolesAllowed("ADMINISTRATOR")
     public Response createClassRoom(ClassRoomRequest request) {
-        classRoomService.createClassRoom(request);
+        classRoomService.create(request);
         return Response.status(Response.Status.CREATED).entity("ClassRoom created").build();
     }
 
@@ -36,7 +34,7 @@ public class ClassRoomResource {
     @Path("/update/{id}")
     @RolesAllowed("ADMINISTRATOR")
     public Response updateClassRoom(@PathParam("id") Long id, ClassRoomRequest request) {
-        classRoomService.updateClassRoom(request, id);
+        classRoomService.update(request, id);
         return Response.ok("ClassRoom updated").build();
     }
 
@@ -44,7 +42,7 @@ public class ClassRoomResource {
     @Path("/delete/{id}")
     @RolesAllowed("ADMINISTRATOR")
     public Response deleteClassRoom(@PathParam("id") Long id) {
-        classRoomService.deleteClassRoom(id);
+        classRoomService.delete(id);
         return Response.ok("ClassRoom deleted").build();
     }
 

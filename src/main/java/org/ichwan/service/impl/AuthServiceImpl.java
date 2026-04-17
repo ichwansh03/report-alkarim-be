@@ -4,11 +4,7 @@ import io.quarkus.elytron.security.common.BcryptUtil;
 import io.smallrye.jwt.build.Jwt;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import org.ichwan.domain.User;
-import org.ichwan.dto.request.AuthRequest;
-import org.ichwan.dto.request.UserRequest;
-import org.ichwan.exceptions.ConflictException;
 import org.ichwan.exceptions.NotFoundException;
 import org.ichwan.repository.UserRepository;
 import org.ichwan.service.AuthService;
@@ -27,18 +23,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Inject
     private MapperConfig mapper;
-
-    @Override
-    @Transactional
-    public void register(AuthRequest req) {
-        if (userRepository.findByRegnumber(req.regnumber()) != null) {
-            throw new ConflictException("Account with registration number '" + req.regnumber() + "' already exists");
-        }
-
-        UserRequest userRequest = new UserRequest(req.name(), req.regnumber(), req.gender(), req.roles(), BcryptUtil.bcryptHash(req.password()), req.classRoomId());
-        User user = mapper.mapToEntity(userRequest, User.class);
-        userRepository.persist(user);
-    }
 
     @Override
     public boolean authenticate(String rawPassword, String regNumber) {

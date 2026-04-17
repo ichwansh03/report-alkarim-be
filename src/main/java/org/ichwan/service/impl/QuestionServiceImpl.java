@@ -1,6 +1,5 @@
 package org.ichwan.service.impl;
 
-import io.quarkus.cache.CacheInvalidate;
 import io.quarkus.cache.CacheResult;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Page;
@@ -37,23 +36,6 @@ public class QuestionServiceImpl implements QuestionService {
     @Inject
     private MapperConfig mapper;
 
-    @Override
-    @Transactional
-    public void createQuestion(QuestionRequest entity) {
-        // Use content check instead of ID check, since ID is auto-generated
-        boolean exists = repository.find("question", entity.question()).firstResultOptional().isPresent();
-        if (exists) {
-            throw new ConflictException("Question '" + entity.question() + "' already exists");
-        }
-
-        Question question = new Question();
-        question.setQuestion(entity.question());
-        question.setOptions(entity.options());
-        question.setCategory(categoryRepository.findById(entity.categoryId()));
-        question.setClassRoom(classRoomRepository.findById(entity.classRoomId()));
-        repository.persistAndFlush(question);
-    }
-
     @CacheResult(cacheName = "questions", lockTimeout = 3000)
     @Override
     public List<QuestionResponse> getQuestionByTarget(String target) {
@@ -85,36 +67,6 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    @Transactional
-    public void updateQuestion(QuestionRequest entity, Long id) {
-        Question question = repository.findByIdOptional(id)
-                .orElseThrow(() -> new NotFoundException("Question with id " + id + " not found"));
-
-        // Check if the new question content conflicts with another existing question
-        repository.find("question = ?1 and id != ?2", entity.question(), id)
-                .firstResultOptional()
-                .ifPresent(q -> {
-                    throw new ConflictException("Question '" + entity.question() + "' already exists");
-                });
-
-        question.setQuestion(entity.question());
-        question.setOptions(entity.options());
-        question.setCategory(categoryRepository.findById(entity.categoryId()));
-        question.setClassRoom(classRoomRepository.findById(entity.classRoomId()));
-        repository.persist(question);
-    }
-
-    @CacheInvalidate(cacheName = "questions")
-    @Override
-    @Transactional
-    public void deleteQuestion(Long id) {
-        repository.findByIdOptional(id)
-                .orElseThrow(() -> new NotFoundException("Question with id " + id + " not found"));
-
-        repository.deleteById(id);
-    }
-
-    @Override
     public QuestionResponse findById(Long id) {
         Question question = repository.findByIdOptional(id)
                 .orElseThrow(() -> new NotFoundException("Question with id " + id + " not found"));
@@ -137,5 +89,51 @@ public class QuestionServiceImpl implements QuestionService {
         List<QuestionResponse> data = mapper.mapList(questions, QuestionResponse.class);
 
         return new PageResponse<>(data, page, size, totalItems, totalPages);
+    }
+
+    @Transactional
+    @Override
+    public void create(QuestionRequest req) {
+        // Use content check instead of ID check, since ID is auto-generated
+        boolean exists = repository.find("question", req.question()).firstResultOptional().isPresent();
+        if (exists) {
+            throw new ConflictException("Question '" + req.question() + "' already exists");
+        }
+
+        Question question = new Question();
+        question.setQuestion(req.question());
+        question.setOptions(req.options());
+        question.setCategory(categoryRepository.findById(req.categoryId()));
+        question.setClassRoom(classRoomRepository.findById(req.classRoomId()));
+        repository.persistAndFlush(question);
+    }
+
+    @Transactional
+    @Override
+    public void update(QuestionRequest req, Long id) {
+        Question question = repository.findByIdOptional(id)
+                .orElseThrow(() -> new NotFoundException("Question with id " + id + " not found"));
+
+        // Check if the new question content conflicts with another existing question
+        repository.find("question = ?1 and id != ?2", req.question(), id)
+                .firstResultOptional()
+                .ifPresent(q -> {
+                    throw new ConflictException("Question '" + req.question() + "' already exists");
+                });
+
+        question.setQuestion(req.question());
+        question.setOptions(req.options());
+        question.setCategory(categoryRepository.findById(req.categoryId()));
+        question.setClassRoom(classRoomRepository.findById(req.classRoomId()));
+        repository.persist(question);
+    }
+
+    @Transactional
+    @Override
+    public void delete(Long id) {
+        repository.findByIdOptional(id)
+                .orElseThrow(() -> new NotFoundException("Question with id " + id + " not found"));
+
+        repository.deleteById(id);
     }
 }

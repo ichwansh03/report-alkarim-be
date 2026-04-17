@@ -53,7 +53,7 @@ public class UserResource {
     @Path("/delete/{id}")
     @RolesAllowed("ADMINISTRATOR")
     public Response deleteUser(@PathParam("id") Long id) {
-        userService.deleteUser(id);
+        userService.delete(id);
         return Response.ok("user deleted").build();
     }
 

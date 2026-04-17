@@ -6,9 +6,7 @@ import org.ichwan.dto.response.QuestionResponse;
 
 import java.util.List;
 
-public interface QuestionService extends BaseService<QuestionResponse> {
-
-    void createQuestion(QuestionRequest entity);
+public interface QuestionService extends BaseService<QuestionRequest, QuestionResponse> {
 
     List<QuestionResponse> getQuestionByTarget(String target);
 
@@ -16,7 +14,4 @@ public interface QuestionService extends BaseService<QuestionResponse> {
 
     List<QuestionResponse> getQuestionByCategoryAndTarget(String category, String target);
 
-    void updateQuestion(QuestionRequest entity, Long id);
-
-    void deleteQuestion(Long id);
 }

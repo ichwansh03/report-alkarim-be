@@ -19,7 +19,7 @@ public class QuestionResource {
     @Path("/create")
     @RolesAllowed({"TEACHER","ADMINISTRATOR"})
     public Response createQuestion(QuestionRequest question) {
-        service.createQuestion(question);
+        service.create(question);
 
         return Response.status(Response.Status.CREATED).entity("Question created").build();
     }
@@ -49,7 +49,7 @@ public class QuestionResource {
     @Path("/update/{id}")
     @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response updateQuestion(@PathParam("id") Long id, QuestionRequest question) {
-        service.updateQuestion(question, id);
+        service.update(question, id);
         return Response.ok("Question updated").build();
     }
 
@@ -57,7 +57,7 @@ public class QuestionResource {
     @Path("/delete/{id}")
     @RolesAllowed({"TEACHER","ADMINISTRATOR"})
     public Response deleteQuestion(@PathParam("id") Long id) {
-        service.deleteQuestion(id);
+        service.delete(id);
         return Response.ok("Question deleted").build();
     }
 

@@ -6,8 +6,8 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import org.ichwan.domain.RefreshToken;
-import org.ichwan.dto.request.AuthRequest;
 import org.ichwan.dto.request.TokenRequest;
+import org.ichwan.dto.request.UserRequest;
 import org.ichwan.dto.response.ApiResponse;
 import org.ichwan.dto.response.AuthResponse;
 import org.ichwan.dto.response.TokenResponse;
@@ -42,22 +42,22 @@ public class AuthResource {
     @POST
     @Path("/register")
     @PermitAll
-    public Response register(AuthRequest req) {
-        authService.register(req);
+    public Response register(UserRequest req) {
+        userService.create(req);
         return Response.status(Response.Status.CREATED).entity(ApiResponse.created("User Created", req)).build();
     }
 
     @POST
     @Path("/login")
     @PermitAll
-    public Response login(AuthRequest req) {
-        UserResponse user = userService.findByRegnumber(req.regnumber());
+    public Response login(UserRequest req) {
+        UserResponse user = userService.findByRegnumber(req.regNumber());
         if (user == null || !authService.authenticate(req.password(), user.getRegnumber())) {
 
             return Response.status(Response.Status.UNAUTHORIZED).entity("invalid email or password").build();
         }
 
-        return Response.ok(ApiResponse.ok("Successfully login", new AuthResponse(authService.generateAccessToken(req.regnumber()), user))).build();
+        return Response.ok(ApiResponse.ok("Successfully login", new AuthResponse(authService.generateAccessToken(req.regNumber()), user))).build();
     }
 
     @POST
