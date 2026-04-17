@@ -8,7 +8,7 @@ import org.ichwan.dto.request.UserRequest;
 import org.ichwan.dto.response.UserResponse;
 import org.ichwan.service.UserService;
 
-@Path("/user")
+@Path("/api/v1/users")
 @Consumes("application/json")
 @Produces("application/json")
 public class UserResource {

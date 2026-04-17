@@ -7,7 +7,7 @@ import jakarta.ws.rs.core.Response;
 import org.ichwan.dto.request.QuestionRequest;
 import org.ichwan.service.QuestionService;
 
-@Path("/questions")
+@Path("/api/v1/questions")
 @Consumes("application/json")
 @Produces("application/json")
 public class QuestionResource {

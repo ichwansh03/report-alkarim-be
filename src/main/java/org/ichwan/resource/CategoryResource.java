@@ -7,7 +7,7 @@ import jakarta.ws.rs.core.Response;
 import org.ichwan.dto.request.CategoryRequest;
 import org.ichwan.service.impl.CategoryServiceImpl;
 
-@Path("/category")
+@Path("api/v1/categories")
 @Produces("application/json")
 @Consumes("application/json")
 public class CategoryResource {

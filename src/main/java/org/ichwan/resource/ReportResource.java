@@ -7,7 +7,7 @@ import jakarta.ws.rs.core.Response;
 import org.ichwan.dto.request.ReportRequest;
 import org.ichwan.service.ReportService;
 
-@Path("/reports")
+@Path("/api/v1/reports")
 @Consumes("application/json")
 @Produces("application/json")
 public class ReportResource {

@@ -18,7 +18,7 @@ import org.ichwan.util.RefreshTokenService;
 
 import java.util.Optional;
 
-@Path("/auth")
+@Path("/api/v1/auths")
 @Consumes("application/json")
 @Produces("application/json")
 public class AuthResource {

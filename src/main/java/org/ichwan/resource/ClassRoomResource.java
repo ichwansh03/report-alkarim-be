@@ -7,7 +7,7 @@ import jakarta.ws.rs.core.Response;
 import org.ichwan.dto.request.ClassRoomRequest;
 import org.ichwan.service.ClassRoomService;
 
-@Path("/class")
+@Path("/api/v1/classes")
 @Produces("application/json")
 @Consumes("application/json")
 public class ClassRoomResource {
