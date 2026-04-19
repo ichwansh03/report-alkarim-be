@@ -75,9 +75,7 @@ public class ClassRoomServiceImpl implements ClassRoomService {
             throw new ConflictException("Classroom with name '" + req.name() + "' already exists");
         }
 
-        ClassRoom room = new ClassRoom();
-        room.setName(req.name());
-        room.setTeacher(userRepository.findById(req.teacherId()));
+        ClassRoom room = mapper.mapToEntity(req, ClassRoom.class);
         room.setStudentCount(userRepository.findByClsroomAndRoles(req.name(), "STUDENT").size());
         repository.persist(room);
     }

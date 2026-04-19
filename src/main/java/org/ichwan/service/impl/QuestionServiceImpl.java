@@ -101,11 +101,7 @@ public class QuestionServiceImpl implements QuestionService {
             throw new ConflictException("Question '" + req.question() + "' already exists");
         }
 
-        Question question = new Question();
-        question.setQuestion(req.question());
-        question.setOptions(req.options());
-        question.setCategory(categoryRepository.findById(req.categoryId()));
-        question.setClassRoom(classRoomRepository.findById(req.classRoomId()));
+        Question question = mapper.mapToEntity(req, Question.class);
         repository.persistAndFlush(question);
     }
 

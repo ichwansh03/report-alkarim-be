@@ -8,7 +8,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.ichwan.domain.Report;
-import org.ichwan.domain.User;
 import org.ichwan.dto.request.ReportRequest;
 import org.ichwan.dto.response.PageResponse;
 import org.ichwan.dto.response.ReportResponse;
@@ -88,16 +87,8 @@ public class ReportServiceImpl implements ReportService {
     @Transactional
     @Override
     public void create(ReportRequest req) {
-        User user = Optional.ofNullable(userRepository.findById(req.userId()))
-                .orElseThrow(() -> new NotFoundException("User with id " + req.userId() + " not found"));
-
-        Report report = new Report();
-        report.setAnswer(req.answer());
-        report.setCategory(categoryRepository.findById(req.categoryId()));
-        report.setContent(req.content());
-        report.setScore(req.score());
-        report.setUser(user);
-        repository.persist(report); // was persisting entity instead of report
+        Report report = mapper.mapToEntity(req, Report.class);
+        repository.persist(report);
     }
 
     @Transactional

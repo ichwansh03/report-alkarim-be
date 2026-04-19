@@ -153,8 +153,8 @@ public class UserServiceImpl implements UserService {
             throw new ConflictException("Account with registration number '" + req.regNumber() + "' already exists");
         }
 
-        UserRequest userRequest = new UserRequest(req.name(), req.regNumber(), req.gender(), req.role(), BcryptUtil.bcryptHash(req.password()), req.classRoomId());
-        User user = mapper.mapToEntity(userRequest, User.class);
+        User user = mapper.mapToEntity(req, User.class);
+        user.setPassword(BcryptUtil.bcryptHash(req.password()));
         userRepository.persist(user);
     }
 
