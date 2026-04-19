@@ -1,5 +1,6 @@
 package org.ichwan.service.impl;
 
+import io.quarkus.cache.CacheInvalidate;
 import io.quarkus.cache.CacheResult;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Page;
@@ -112,6 +113,7 @@ public class ReportServiceImpl implements ReportService {
         repository.persist(report);
     }
 
+    @CacheInvalidate(cacheName = "reports")
     @Transactional
     @Override
     public void delete(Long id) {

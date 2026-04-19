@@ -13,7 +13,7 @@ import org.ichwan.repository.CategoryRepository;
 import java.util.List;
 
 @ApplicationScoped
-public class CategoryServiceImpl {
+public class CategoryServiceImpl{
 
     @Inject
     CategoryRepository repository;

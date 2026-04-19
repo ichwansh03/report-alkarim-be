@@ -1,6 +1,7 @@
 package org.ichwan.service.impl;
 
 import io.quarkus.cache.CacheInvalidate;
+import io.quarkus.cache.CacheResult;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -46,6 +47,7 @@ public class ClassRoomServiceImpl implements ClassRoomService {
         return mapper.map(classRoom, ClassRoomResponse.class);
     }
 
+    @CacheResult(cacheName = "classrooms", lockTimeout = 3000)
     @Override
     public PageResponse<ClassRoomResponse> getAll(int page, int size) {
         PanacheQuery<ClassRoom> query = repository.findAll();

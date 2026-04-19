@@ -1,5 +1,6 @@
 package org.ichwan.service.impl;
 
+import io.quarkus.cache.CacheInvalidate;
 import io.quarkus.cache.CacheResult;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Page;
@@ -128,6 +129,7 @@ public class QuestionServiceImpl implements QuestionService {
         repository.persist(question);
     }
 
+    @CacheInvalidate(cacheName = "questions")
     @Transactional
     @Override
     public void delete(Long id) {
