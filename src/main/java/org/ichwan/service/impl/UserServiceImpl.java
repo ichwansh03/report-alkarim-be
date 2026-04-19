@@ -4,6 +4,7 @@ import io.quarkus.cache.CacheInvalidate;
 import io.quarkus.cache.CacheResult;
 import io.quarkus.elytron.security.common.BcryptUtil;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.quarkus.logging.Log;
 import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -158,7 +159,7 @@ public class UserServiceImpl implements UserService {
         User user = mapper.mapToEntity(req, User.class);
         user.setPassword(BcryptUtil.bcryptHash(req.password()));
         userRepository.persist(user);
-
+        Log.info("successfully created? "+user);
         return mapper.map(user, UserResponse.class);
     }
 
