@@ -3,7 +3,7 @@
 # run docker compose up -d --build
 services:
   postgres:
-    image: postgres
+    image: postgres:17
     environment:
       POSTGRES_PASSWORD: 12345
       PGDATA: /var/lib/postgresql/data/pgdata

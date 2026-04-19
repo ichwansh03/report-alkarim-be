@@ -4,9 +4,9 @@ import org.ichwan.util.UserRole;
 
 public record UserRequest(
         String name,
-        String regNumber,
+        String regnumber,
         String gender,
         UserRole role,
         String password,
-        Long classRoomId
+        Long classRoom
 ) {}

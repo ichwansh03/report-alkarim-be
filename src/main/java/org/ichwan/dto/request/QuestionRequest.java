@@ -5,6 +5,6 @@ import org.ichwan.util.AnswerType;
 public record QuestionRequest(
         String question,
         AnswerType options,
-        Long categoryId,
-        Long classRoomId
+        Long classRoom,
+        Long category
 ) {}
