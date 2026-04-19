@@ -7,9 +7,9 @@ public interface BaseService<R,E> {
 
     PageResponse<E> getAll(int page, int size);
 
-    void create(R req);
+    E create(R req);
 
-    void update(R req, Long id);
+    E update(R req, Long id);
 
     void delete(Long id);
 }

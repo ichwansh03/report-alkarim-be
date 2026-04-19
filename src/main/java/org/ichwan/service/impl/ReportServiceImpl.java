@@ -86,14 +86,15 @@ public class ReportServiceImpl implements ReportService {
 
     @Transactional
     @Override
-    public void create(ReportRequest req) {
+    public ReportResponse create(ReportRequest req) {
         Report report = mapper.mapToEntity(req, Report.class);
         repository.persist(report);
+        return mapper.map(report, ReportResponse.class);
     }
 
     @Transactional
     @Override
-    public void update(ReportRequest req, Long id) {
+    public ReportResponse update(ReportRequest req, Long id) {
         Report report = repository.findByIdOptional(id)
                 .orElseThrow(() -> new NotFoundException("Report with id " + id + " not found"));
 
@@ -102,6 +103,8 @@ public class ReportServiceImpl implements ReportService {
         report.setContent(req.content());
         report.setScore(req.score());
         repository.persist(report);
+
+        return mapper.map(report, ReportResponse.class);
     }
 
     @CacheInvalidate(cacheName = "reports")

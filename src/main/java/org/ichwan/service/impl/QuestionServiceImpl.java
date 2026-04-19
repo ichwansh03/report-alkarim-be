@@ -94,7 +94,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Transactional
     @Override
-    public void create(QuestionRequest req) {
+    public QuestionResponse create(QuestionRequest req) {
         // Use content check instead of ID check, since ID is auto-generated
         boolean exists = repository.find("question", req.question()).firstResultOptional().isPresent();
         if (exists) {
@@ -103,11 +103,12 @@ public class QuestionServiceImpl implements QuestionService {
 
         Question question = mapper.mapToEntity(req, Question.class);
         repository.persistAndFlush(question);
+        return mapper.map(question, QuestionResponse.class);
     }
 
     @Transactional
     @Override
-    public void update(QuestionRequest req, Long id) {
+    public QuestionResponse update(QuestionRequest req, Long id) {
         Question question = repository.findByIdOptional(id)
                 .orElseThrow(() -> new NotFoundException("Question with id " + id + " not found"));
 
@@ -123,6 +124,8 @@ public class QuestionServiceImpl implements QuestionService {
         question.setCategory(categoryRepository.findById(req.categoryId()));
         question.setClassRoom(classRoomRepository.findById(req.classRoomId()));
         repository.persist(question);
+
+        return mapper.map(question, QuestionResponse.class);
     }
 
     @CacheInvalidate(cacheName = "questions")

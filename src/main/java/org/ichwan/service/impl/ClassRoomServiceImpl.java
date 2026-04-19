@@ -68,7 +68,7 @@ public class ClassRoomServiceImpl implements ClassRoomService {
 
     @Transactional
     @Override
-    public void create(ClassRoomRequest req) {
+    public ClassRoomResponse create(ClassRoomRequest req) {
         // Check if classroom name already exists
         boolean exists = repository.find("name", req.name()).firstResultOptional().isPresent();
         if (exists) {
@@ -78,11 +78,12 @@ public class ClassRoomServiceImpl implements ClassRoomService {
         ClassRoom room = mapper.mapToEntity(req, ClassRoom.class);
         room.setStudentCount(userRepository.findByClsroomAndRoles(req.name(), "STUDENT").size());
         repository.persist(room);
+        return mapper.map(room, ClassRoomResponse.class);
     }
 
     @Transactional
     @Override
-    public void update(ClassRoomRequest req, Long id) {
+    public ClassRoomResponse update(ClassRoomRequest req, Long id) {
         ClassRoom room = repository.findByIdOptional(id)
                 .orElseThrow(() -> new NotFoundException("Classroom with id " + id + " not found"));
 
@@ -97,6 +98,8 @@ public class ClassRoomServiceImpl implements ClassRoomService {
         room.setTeacher(userRepository.findById(req.teacherId()));
         room.setStudentCount(userRepository.findByClsroomAndRoles(req.name(), "STUDENT").size());
         repository.persist(room);
+
+        return mapper.map(room, ClassRoomResponse.class);
     }
 
     @CacheInvalidate(cacheName = "classrooms")

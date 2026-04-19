@@ -5,6 +5,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import org.ichwan.dto.request.ReportRequest;
+import org.ichwan.dto.response.ApiResponse;
 import org.ichwan.service.ReportService;
 
 @Path("/api/v1/reports")
@@ -20,21 +21,21 @@ public class ReportResource {
     @RolesAllowed({"TEACHER","ADMINISTRATOR"})
     public Response createReport(ReportRequest request) {
         reportService.create(request);
-        return Response.status(Response.Status.CREATED).entity("report created").build();
+        return Response.ok(ApiResponse.created("Successfully created")).build();
     }
 
     @GET
     @Path("/regnumber/{regnumber}")
     @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response getReportsByRegnumber(String regnumber) {
-        return Response.ok(reportService.getReportsByRegnumber(regnumber)).build();
+        return Response.ok(ApiResponse.ok("Success",reportService.getReportsByRegnumber(regnumber))).build();
     }
 
     @GET
     @Path("/name/{name}")
     @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response getReportsByUserName(String name) {
-        return Response.ok(reportService.getReportsByUserName(name)).build();
+        return Response.ok(ApiResponse.ok("Success",reportService.getReportsByUserName(name))).build();
     }
 
     @PUT
@@ -42,7 +43,7 @@ public class ReportResource {
     @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response updateReport(@PathParam("id") Long id, ReportRequest request) {
         reportService.update(request, id);
-        return Response.ok("report updated").build();
+        return Response.ok(ApiResponse.ok("Success")).build();
     }
 
     @DELETE

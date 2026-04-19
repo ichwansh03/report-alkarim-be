@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void update(UserRequest req, Long id) {
+    public UserResponse update(UserRequest req, Long id) {
         User user = userRepository.findByIdOptional(id)
                 .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
 
@@ -57,6 +57,8 @@ public class UserServiceImpl implements UserService {
         user.setRegnumber(req.regNumber());
         user.setRoles(req.role());
         userRepository.persist(user);
+
+        return mapper.map(user, UserResponse.class);
     }
 
     @CacheInvalidate(cacheName = "usersByRoles")
@@ -148,7 +150,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void create(UserRequest req) {
+    public UserResponse create(UserRequest req) {
         if (userRepository.findByRegnumber(req.regNumber()) != null) {
             throw new ConflictException("Account with registration number '" + req.regNumber() + "' already exists");
         }
@@ -156,6 +158,8 @@ public class UserServiceImpl implements UserService {
         User user = mapper.mapToEntity(req, User.class);
         user.setPassword(BcryptUtil.bcryptHash(req.password()));
         userRepository.persist(user);
+
+        return mapper.map(user, UserResponse.class);
     }
 
 }

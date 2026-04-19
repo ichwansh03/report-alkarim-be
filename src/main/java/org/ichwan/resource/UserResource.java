@@ -5,8 +5,11 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import org.ichwan.dto.request.UserRequest;
+import org.ichwan.dto.response.ApiResponse;
 import org.ichwan.dto.response.UserResponse;
 import org.ichwan.service.UserService;
+
+import java.util.List;
 
 @Path("/api/v1/users")
 @Consumes("application/json")
@@ -21,14 +24,15 @@ public class UserResource {
     @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response update(Long id, UserRequest req) {
         userService.update(req, id);
-        return Response.ok("user updated").build();
+        return Response.ok(ApiResponse.ok("Successfully updated data")).build();
     }
 
     @GET
     @Path("/class/{class}/roles/{roles}")
     @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response getUsersByClassAndRoles(@PathParam("class") String clsroom, @PathParam("roles") String roles) {
-        return Response.ok(userService.findByClsroomAndRoles(clsroom, roles)).build();
+        List<UserResponse> clsroomAndRoles = userService.findByClsroomAndRoles(clsroom, roles);
+        return Response.ok(ApiResponse.ok("Successfully listed", clsroomAndRoles)).build();
     }
 
     @GET
@@ -36,17 +40,16 @@ public class UserResource {
     @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response getUserByRegnumber(@PathParam("regnumber") String regnumber) {
         UserResponse user = userService.findByRegnumber(regnumber);
-        if (user == null) {
-            return Response.status(Response.Status.NOT_FOUND).entity("User not found").build();
-        }
-        return Response.ok(user).build();
+
+        return Response.ok(ApiResponse.ok("Data success for get", user)).build();
     }
 
     @GET
     @Path("/roles/{roles}")
     @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response getUsersByRoles(@PathParam("roles") String roles) {
-        return Response.ok(userService.findByRoles(roles)).build();
+        List<UserResponse> byRoles = userService.findByRoles(roles);
+        return Response.ok(ApiResponse.ok("Success", byRoles)).build();
     }
 
     @DELETE
@@ -54,7 +57,7 @@ public class UserResource {
     @RolesAllowed("ADMINISTRATOR")
     public Response deleteUser(@PathParam("id") Long id) {
         userService.delete(id);
-        return Response.ok("user deleted").build();
+        return Response.ok(ApiResponse.ok("Successfully deleted")).build();
     }
 
     @GET
@@ -63,7 +66,7 @@ public class UserResource {
             @QueryParam("page") @DefaultValue("0") int page,
             @QueryParam("size") @DefaultValue("10") int size
     ) {
-        return Response.ok(userService.getAll(page, size)).build();
+        return Response.ok(ApiResponse.ok("Success", userService.getAll(page, size))).build();
     }
 
 }
