@@ -43,8 +43,8 @@ public class AuthResource {
     @Path("/register")
     @PermitAll
     public Response register(UserRequest req) {
-        userService.create(req);
-        return Response.status(Response.Status.CREATED).entity(ApiResponse.created("User Created", req)).build();
+        UserResponse userResponse = userService.create(req);
+        return Response.status(Response.Status.CREATED).entity(ApiResponse.created("User Created", userResponse)).build();
     }
 
     @POST

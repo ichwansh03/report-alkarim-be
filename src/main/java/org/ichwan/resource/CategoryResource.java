@@ -5,6 +5,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import org.ichwan.dto.request.CategoryRequest;
+import org.ichwan.dto.response.ApiResponse;
 import org.ichwan.service.impl.CategoryServiceImpl;
 
 @Path("api/v1/categories")
@@ -18,7 +19,7 @@ public class CategoryResource {
     @GET
     @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response getAllCategories() {
-        return Response.ok(service.getAllCategories()).build();
+        return Response.ok(ApiResponse.ok("Success", service.getAllCategories())).build();
     }
 
     // Endpoint to create a new category
@@ -36,6 +37,6 @@ public class CategoryResource {
     @RolesAllowed({"TEACHER","ADMINISTRATOR"})
     public Response deleteCategory(@PathParam("id") Long id) {
         service.deleteCategory(id);
-        return Response.ok("Category deleted").build();
+        return Response.ok(ApiResponse.deleted("Success")).build();
     }
 }

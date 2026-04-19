@@ -23,8 +23,8 @@ public class UserResource {
     @Path("/update/{id}")
     @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response update(Long id, UserRequest req) {
-        userService.update(req, id);
-        return Response.ok(ApiResponse.ok("Successfully updated data")).build();
+        UserResponse response = userService.update(req, id);
+        return Response.ok(ApiResponse.ok("Successfully updated data", response)).build();
     }
 
     @GET
@@ -57,7 +57,7 @@ public class UserResource {
     @RolesAllowed("ADMINISTRATOR")
     public Response deleteUser(@PathParam("id") Long id) {
         userService.delete(id);
-        return Response.ok(ApiResponse.ok("Successfully deleted")).build();
+        return Response.ok(ApiResponse.deleted("Successfully deleted")).build();
     }
 
     @GET

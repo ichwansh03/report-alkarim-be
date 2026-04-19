@@ -6,6 +6,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import org.ichwan.dto.request.ReportRequest;
 import org.ichwan.dto.response.ApiResponse;
+import org.ichwan.dto.response.ReportResponse;
 import org.ichwan.service.ReportService;
 
 @Path("/api/v1/reports")
@@ -42,8 +43,8 @@ public class ReportResource {
     @Path("/update/{id}")
     @RolesAllowed({"TEACHER","ADMINISTRATOR","STUDENT"})
     public Response updateReport(@PathParam("id") Long id, ReportRequest request) {
-        reportService.update(request, id);
-        return Response.ok(ApiResponse.ok("Success")).build();
+        ReportResponse response = reportService.update(request, id);
+        return Response.ok(ApiResponse.ok("Success", response)).build();
     }
 
     @DELETE
@@ -51,7 +52,7 @@ public class ReportResource {
     @RolesAllowed({"TEACHER","ADMINISTRATOR"})
     public Response deleteReport(@PathParam("id") Long id) {
         reportService.delete(id);
-        return Response.ok("report deleted").build();
+        return Response.ok(ApiResponse.deleted("Success")).build();
     }
 
     @GET

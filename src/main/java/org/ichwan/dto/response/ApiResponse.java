@@ -21,4 +21,8 @@ public record ApiResponse<T>(
     public static ApiResponse<Void> created(String message) {
         return new ApiResponse<>(201, message, null);
     }
+
+    public static ApiResponse<Void> deleted(String message) {
+        return new ApiResponse<>(204, message, null);
+    }
 }
