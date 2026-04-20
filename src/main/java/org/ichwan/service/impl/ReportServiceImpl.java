@@ -88,6 +88,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public ReportResponse create(ReportRequest req) {
         Report report = mapper.mapToEntity(req, Report.class);
+        report.setUser(userRepository.findById(req.user()));
         repository.persist(report);
         return mapper.map(report, ReportResponse.class);
     }

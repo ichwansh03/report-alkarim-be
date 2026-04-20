@@ -51,13 +51,13 @@ public class AuthResource {
     @Path("/login")
     @PermitAll
     public Response login(UserRequest req) {
-        UserResponse user = userService.findByRegnumber(req.regNumber());
+        UserResponse user = userService.findByRegnumber(req.regnumber());
         if (user == null || !authService.authenticate(req.password(), user.getRegnumber())) {
 
             return Response.status(Response.Status.UNAUTHORIZED).entity("invalid email or password").build();
         }
 
-        return Response.ok(ApiResponse.ok("Successfully login", new AuthResponse(authService.generateAccessToken(req.regNumber()), user))).build();
+        return Response.ok(ApiResponse.ok("Successfully login", new AuthResponse(authService.generateAccessToken(req.regnumber()), user))).build();
     }
 
     @POST
