@@ -8,7 +8,6 @@ import org.ichwan.domain.User;
 import org.ichwan.exceptions.NotFoundException;
 import org.ichwan.repository.UserRepository;
 import org.ichwan.service.AuthService;
-import org.ichwan.util.MapperConfig;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -20,9 +19,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Inject
     private UserRepository userRepository;
-
-    @Inject
-    private MapperConfig mapper;
 
     @Override
     public boolean authenticate(String rawPassword, String regNumber) {

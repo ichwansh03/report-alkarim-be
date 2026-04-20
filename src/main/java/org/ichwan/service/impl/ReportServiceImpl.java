@@ -99,7 +99,7 @@ public class ReportServiceImpl implements ReportService {
                 .orElseThrow(() -> new NotFoundException("Report with id " + id + " not found"));
 
         report.setAnswer(req.answer());
-        report.setCategory(categoryRepository.findById(req.categoryId()));
+        report.setCategory(categoryRepository.findById(req.category()));
         report.setContent(req.content());
         report.setScore(req.score());
         repository.persist(report);

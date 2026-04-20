@@ -121,8 +121,8 @@ public class QuestionServiceImpl implements QuestionService {
 
         question.setQuestion(req.question());
         question.setOptions(req.options());
-        question.setCategory(categoryRepository.findById(req.categoryId()));
-        question.setClassRoom(classRoomRepository.findById(req.classRoomId()));
+        question.setCategory(categoryRepository.findById(req.category()));
+        question.setClassRoom(classRoomRepository.findById(req.classRoom()));
         repository.persist(question);
 
         return mapper.map(question, QuestionResponse.class);

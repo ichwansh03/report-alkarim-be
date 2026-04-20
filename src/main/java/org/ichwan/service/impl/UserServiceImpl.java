@@ -45,17 +45,17 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByIdOptional(id)
                 .orElseThrow(() -> new NotFoundException("User with id " + id + " not found"));
 
-        Optional.ofNullable(userRepository.findByRegnumber(req.regNumber()))
+        Optional.ofNullable(userRepository.findByRegnumber(req.regnumber()))
                 .ifPresent(existing -> {
                     if (!existing.getId().equals(id)) {
-                        throw new ConflictException("Registration number '" + req.regNumber() + "' already exists");
+                        throw new ConflictException("Registration number '" + req.regnumber() + "' already exists");
                     }
                 });
 
         user.setName(req.name());
-        user.setClassRoom(classRoomRepository.findById(req.classRoomId()));
+        user.setClassRoom(classRoomRepository.findById(req.classRoom()));
         user.setGender(req.gender());
-        user.setRegnumber(req.regNumber());
+        user.setRegnumber(req.regnumber());
         user.setRoles(req.role());
         userRepository.persist(user);
 
@@ -152,8 +152,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserResponse create(UserRequest req) {
-        if (userRepository.findByRegnumber(req.regNumber()) != null) {
-            throw new ConflictException("Account with registration number '" + req.regNumber() + "' already exists");
+        if (userRepository.findByRegnumber(req.regnumber()) != null) {
+            throw new ConflictException("Account with registration number '" + req.regnumber() + "' already exists");
         }
 
         User user = mapper.mapToEntity(req, User.class);
