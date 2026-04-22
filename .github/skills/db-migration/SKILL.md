@@ -85,22 +85,26 @@ Create file: `src/main/resources/db/migration/V<version>_<description>.sql`
 - Include comments explaining business logic
 - Write forward and rollback paths (comments showing rollback)
 
-**Example migration:**
+**Example migration for students-report-alkarim project:**
 
 ```sql
--- V2_add_user_status_column.sql
--- Adds status tracking for user audit workflow
+-- V2_add_student_section_to_users.sql
+-- Adds section tracking for student classification
 
 ALTER TABLE users
-  ADD COLUMN status VARCHAR(50) NOT NULL DEFAULT 'ACTIVE',
-  ADD COLUMN status_updated_at TIMESTAMP DEFAULT NOW();
+  ADD COLUMN section VARCHAR(10),
+  ADD COLUMN is_active BOOLEAN NOT NULL DEFAULT true,
+  ADD COLUMN last_login TIMESTAMP;
 
-CREATE INDEX idx_users_status ON users(status);
+CREATE INDEX idx_users_section ON users(section);
+CREATE INDEX idx_users_is_active ON users(is_active);
 
 -- Rollback:
--- ALTER TABLE users DROP COLUMN status_updated_at;
--- ALTER TABLE users DROP COLUMN status;
--- DROP INDEX idx_users_status;
+-- DROP INDEX IF EXISTS idx_users_is_active;
+-- DROP INDEX IF EXISTS idx_users_section;
+-- ALTER TABLE users DROP COLUMN last_login;
+-- ALTER TABLE users DROP COLUMN is_active;
+-- ALTER TABLE users DROP COLUMN section;
 ```
 
 ### Step 4: Test Locally
@@ -305,35 +309,40 @@ SELECT constraint_name, constraint_type
 \di users*
 ```
 
-## Common Patterns
+## Common Patterns for This Project
 
-### Adding a Column with Default to Populated Table
+### Adding a Column to Users Table
 
 ```sql
--- Use CONCURRENTLY on large tables (PostgreSQL)
-ALTER TABLE users ADD COLUMN created_at TIMESTAMP DEFAULT NOW();
+-- Add new field to track student progress
+ALTER TABLE users 
+  ADD COLUMN average_score DECIMAL(5,2) DEFAULT 0.0,
+  ADD COLUMN total_reports_submitted INT DEFAULT 0;
+
+CREATE INDEX idx_users_average_score ON users(average_score DESC);
 ```
 
 ### Safe Column Removal
 
 ```sql
--- Step 1: Drop constraint/index (if exists)
-ALTER TABLE users DROP CONSTRAINT IF EXISTS users_status_check;
-DROP INDEX IF EXISTS idx_users_status;
+-- Step 1: Drop dependent indexes/constraints
+DROP INDEX IF EXISTS idx_users_section;
+ALTER TABLE class_rooms DROP CONSTRAINT IF EXISTS fk_class_rooms_teacher;
 
 -- Step 2: Remove column
-ALTER TABLE users DROP COLUMN IF EXISTS status;
+ALTER TABLE users DROP COLUMN IF EXISTS section;
 ```
 
-### Creating Foreign Keys
+### Adding Foreign Key Constraint to RefreshToken (CRITICAL)
 
 ```sql
-ALTER TABLE orders ADD COLUMN IF NOT EXISTS user_id INT;
-
-ALTER TABLE orders ADD CONSTRAINT fk_orders_users
+-- RefreshToken currently has userId but NO FK constraint
+-- This migration adds the missing constraint
+ALTER TABLE refresh_tokens ADD CONSTRAINT fk_refresh_tokens_user
   FOREIGN KEY (user_id) REFERENCES users(id)
-  ON DELETE CASCADE
-  ON UPDATE RESTRICT;
+  ON DELETE CASCADE;
+
+CREATE INDEX idx_refresh_tokens_user_id ON refresh_tokens(user_id);
 ```
 
 ## Quick Reference: File Locations
@@ -341,9 +350,30 @@ ALTER TABLE orders ADD CONSTRAINT fk_orders_users
 | Item | Path |
 |------|------|
 | Migration files | `src/main/resources/db/migration/` |
-| Flyway config | `src/main/resources/application.properties` |
+| Quarkus config | `src/main/resources/application.properties` |
+| Alternative config | `src/main/resources/application-api.properties` |
 | Migration history | Database table `flyway_schema_history` |
 | Docker database | `src/main/docker/data/pgdata/` |
+| Domain entities | `src/main/java/org/ichwan/domain/` |
+
+## Domain Model Reference
+
+Your project uses these entities and relationships:
+
+| Entity | Table | Relationships |
+|--------|-------|--------------|
+| **User** | `users` | `→ ClassRoom` (as student), `→ ClassRoom` (as teacher), `← Report`, `← RefreshToken` |
+| **ClassRoom** | `class_rooms` | `→ User` (teacher_id), `→ Level` (level_id), `← User` (students) |
+| **Level** | `levels` | `← ClassRoom` |
+| **Category** | `categories` | `← Question`, `← Report` |
+| **Question** | `questions` | `→ ClassRoom` (class_room_id), `→ Category` (category_id), `← Report` |
+| **Report** | `reports` | `→ User` (user_id), `→ Category` (category_id), `→ Question` (question_id) |
+| **RefreshToken** | `refresh_tokens` | `→ User` (user_id) ⚠️ **Missing FK constraint** |
+
+**⚠️ Known Gaps in Current Schema:**
+1. **RefreshToken.user_id** — No foreign key constraint defined (see V2_fix_refresh_token_fk.sql)
+2. **Bidirectional relationships** — No `@OneToMany` reverse mappings defined
+3. **Schema version control** — Currently using Hibernate `database.generation=update` (enable Flyway for production)
 
 ## Links
 
