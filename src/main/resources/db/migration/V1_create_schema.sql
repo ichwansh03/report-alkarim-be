@@ -1,6 +1,6 @@
--- V2_create_schema.sql
+-- V1_create_schema.sql
 -- Creates the core schema for students-report-alkarim application
--- This migration should run BEFORE V1 insert data migrations (requires refactoring migration order)
+-- Runs FIRST, then V2-V7 insert data in dependency order
 --
 -- Tables:
 --   - levels: Education levels (I-XII)
