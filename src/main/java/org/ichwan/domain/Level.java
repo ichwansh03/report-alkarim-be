@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.ichwan.util.LevelType;
 
 @Entity
+@Table(name = "levels")
 public class Level {
 
     @Id
