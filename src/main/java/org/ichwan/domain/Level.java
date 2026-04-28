@@ -10,7 +10,7 @@ public class Level {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false, unique = true)
+    @Column(name = "level_type", nullable = false, unique = true)
     @Enumerated(EnumType.STRING)
     private LevelType levelType;
 }

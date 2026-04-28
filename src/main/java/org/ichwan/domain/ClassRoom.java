@@ -10,6 +10,7 @@ public class ClassRoom extends Auditable {
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @Column(name = "student_count")
     private Integer studentCount;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teacher_id")

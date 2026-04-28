@@ -6,5 +6,6 @@ public class ClassRoomResponse {
 
     private String name;
     private Level level;
+    private Integer studentCount;
     private UserResponse userResponse;
 }
