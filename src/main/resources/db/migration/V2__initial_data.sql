@@ -27,9 +27,9 @@ WHERE NOT EXISTS (SELECT 1 FROM categories WHERE name = t.v);
 INSERT INTO users (name, regnumber, gender, roles, password, class_room_id, created_at, updated_at)
 SELECT name, regnum, gender, roles, pass, NULL, now(), now()
 FROM (VALUES
-  ('Teacher Alice','TCH-001','FEMALE','TEACHER','$2a$10$hashedpassword1'),
-  ('Teacher Bob','TCH-002','MALE','TEACHER','$2a$10$hashedpassword2'),
-  ('Teacher Charlie','TCH-003','MALE','TEACHER','$2a$10$hashedpassword3')
+  ('Teacher Alice','TCH-001','FEMALE','TEACHER','$2a$10$vI8tmv9ayV5e7rK55pQ68uO.6D8Bf2J8/v/8S.6D8Bf2J8/v/8S.'),
+  ('Teacher Bob','TCH-002','MALE','TEACHER','$2a$10$vI8tmv9ayV5e7rK55pQ68uO.6D8Bf2J8/v/8S.6D8Bf2J8/v/8S.'),
+  ('Teacher Charlie','TCH-003','MALE','TEACHER','$2a$10$vI8tmv9ayV5e7rK55pQ68uO.6D8Bf2J8/v/8S.6D8Bf2J8/v/8S.')
 ) AS t(name, regnum, gender, roles, pass)
 WHERE NOT EXISTS (SELECT 1 FROM users WHERE regnumber = t.regnum);
 
@@ -51,13 +51,13 @@ INSERT INTO users (name, regnumber, gender, roles, password, class_room_id, crea
 SELECT name, regnum, gender, roles, pass,
   (SELECT id FROM class_rooms WHERE name = cls_name), now(), now()
 FROM (VALUES
-  ('David Brown','STU-001','MALE','STUDENT','$2a$10$hashedpassword4','Class Alpha'),
-  ('Eva Martinez','STU-002','FEMALE','STUDENT','$2a$10$hashedpassword5','Class Alpha'),
-  ('Frank Lee','STU-003','MALE','STUDENT','$2a$10$hashedpassword6','Class Beta'),
-  ('Grace Kim','STU-004','FEMALE','STUDENT','$2a$10$hashedpassword7','Class Beta'),
-  ('Henry Wilson','STU-005','MALE','STUDENT','$2a$10$hashedpassword8','Class Gamma'),
-  ('Isla Thomas','STU-006','FEMALE','STUDENT','$2a$10$hashedpassword9','Class Gamma'),
-  ('Jack Anderson','STU-007','MALE','STUDENT','$2a$10$hashedpassword10','Class Alpha')
+  ('David Brown','STU-001','MALE','STUDENT','$2a$10$vI8tmv9ayV5e7rK55pQ68uO.6D8Bf2J8/v/8S.6D8Bf2J8/v/8S.','Class Alpha'),
+  ('Eva Martinez','STU-002','FEMALE','STUDENT','$2a$10$vI8tmv9ayV5e7rK55pQ68uO.6D8Bf2J8/v/8S.6D8Bf2J8/v/8S.','Class Alpha'),
+  ('Frank Lee','STU-003','MALE','STUDENT','$2a$10$vI8tmv9ayV5e7rK55pQ68uO.6D8Bf2J8/v/8S.6D8Bf2J8/v/8S.','Class Beta'),
+  ('Grace Kim','STU-004','FEMALE','STUDENT','$2a$10$vI8tmv9ayV5e7rK55pQ68uO.6D8Bf2J8/v/8S.6D8Bf2J8/v/8S.','Class Beta'),
+  ('Henry Wilson','STU-005','MALE','STUDENT','$2a$10$vI8tmv9ayV5e7rK55pQ68uO.6D8Bf2J8/v/8S.6D8Bf2J8/v/8S.','Class Gamma'),
+  ('Isla Thomas','STU-006','FEMALE','STUDENT','$2a$10$vI8tmv9ayV5e7rK55pQ68uO.6D8Bf2J8/v/8S.6D8Bf2J8/v/8S.','Class Gamma'),
+  ('Jack Anderson','STU-007','MALE','STUDENT','$2a$10$vI8tmv9ayV5e7rK55pQ68uO.6D8Bf2J8/v/8S.6D8Bf2J8/v/8S.','Class Alpha')
 ) AS t(name, regnum, gender, roles, pass, cls_name)
 WHERE NOT EXISTS (SELECT 1 FROM users WHERE regnumber = t.regnum);
 

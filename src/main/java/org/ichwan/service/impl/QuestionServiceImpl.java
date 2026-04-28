@@ -102,7 +102,9 @@ public class QuestionServiceImpl implements QuestionService {
         }
 
         Question question = mapper.mapToEntity(req, Question.class);
-        question.setClassRoom(classRoomRepository.findById(req.classRoom()));
+        if (req.classRoom() != null) {
+            question.setClassRoom(classRoomRepository.findById(req.classRoom()));
+        }
         repository.persistAndFlush(question);
         return mapper.map(question, QuestionResponse.class);
     }
@@ -122,8 +124,12 @@ public class QuestionServiceImpl implements QuestionService {
 
         question.setQuestion(req.question());
         question.setOptions(req.options());
-        question.setCategory(categoryRepository.findById(req.category()));
-        question.setClassRoom(classRoomRepository.findById(req.classRoom()));
+        if (req.category() != null) {
+            question.setCategory(categoryRepository.findById(req.category()));
+        }
+        if (req.classRoom() != null) {
+            question.setClassRoom(classRoomRepository.findById(req.classRoom()));
+        }
         repository.persist(question);
 
         return mapper.map(question, QuestionResponse.class);

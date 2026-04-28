@@ -95,7 +95,11 @@ public class ClassRoomServiceImpl implements ClassRoomService {
                 });
 
         room.setName(req.name());
-        room.setTeacher(userRepository.findById(req.teacher()));
+        if (req.teacher() != null) {
+            room.setTeacher(userRepository.findById(req.teacher()));
+        } else {
+            room.setTeacher(null);
+        }
         room.setStudentCount(userRepository.findByClsroomAndRoles(req.name(), "STUDENT").size());
         repository.persist(room);
 

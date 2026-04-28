@@ -88,7 +88,9 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public ReportResponse create(ReportRequest req) {
         Report report = mapper.mapToEntity(req, Report.class);
-        report.setUser(userRepository.findById(req.user()));
+        if (req.user() != null) {
+            report.setUser(userRepository.findById(req.user()));
+        }
         repository.persist(report);
         return mapper.map(report, ReportResponse.class);
     }
@@ -100,7 +102,9 @@ public class ReportServiceImpl implements ReportService {
                 .orElseThrow(() -> new NotFoundException("Report with id " + id + " not found"));
 
         report.setAnswer(req.answer());
-        report.setCategory(categoryRepository.findById(req.category()));
+        if (req.category() != null) {
+            report.setCategory(categoryRepository.findById(req.category()));
+        }
         report.setContent(req.content());
         report.setScore(req.score());
         repository.persist(report);

@@ -53,7 +53,11 @@ public class UserServiceImpl implements UserService {
                 });
 
         user.setName(req.name());
-        user.setClassRoom(classRoomRepository.findById(req.classRoom()));
+        if (req.classRoom() != null) {
+            user.setClassRoom(classRoomRepository.findById(req.classRoom()));
+        } else {
+            user.setClassRoom(null);
+        }
         user.setGender(req.gender());
         user.setRegnumber(req.regnumber());
         user.setRoles(req.role());
@@ -157,7 +161,9 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = mapper.mapToEntity(req, User.class);
-        user.setClassRoom(classRoomRepository.findById(req.classRoom()));
+        if (req.classRoom() != null) {
+            user.setClassRoom(classRoomRepository.findById(req.classRoom()));
+        }
         user.setPassword(BcryptUtil.bcryptHash(req.password()));
         userRepository.persist(user);
         Log.info("successfully created? "+user);
