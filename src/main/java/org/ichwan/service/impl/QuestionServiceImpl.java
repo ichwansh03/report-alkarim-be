@@ -17,6 +17,7 @@ import org.ichwan.repository.CategoryRepository;
 import org.ichwan.repository.ClassRoomRepository;
 import org.ichwan.repository.QuestionRepository;
 import org.ichwan.service.QuestionService;
+import org.ichwan.util.AnswerType;
 import org.ichwan.util.MapperConfig;
 
 import java.util.List;
@@ -123,7 +124,7 @@ public class QuestionServiceImpl implements QuestionService {
                 });
 
         question.setQuestion(req.question());
-        question.setOptions(req.options());
+        question.setOptions(AnswerType.valueOf(req.options().toUpperCase()));
         if (req.category() != null) {
             question.setCategory(categoryRepository.findById(req.category()));
         }

@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
         }
         user.setGender(req.gender());
         user.setRegnumber(req.regnumber());
-        user.setRoles(req.role());
+        user.setRoles(UserRole.valueOf(req.roles().toUpperCase()));
         userRepository.persist(user);
 
         return mapper.map(user, UserResponse.class);
@@ -164,6 +164,7 @@ public class UserServiceImpl implements UserService {
         if (req.classRoom() != null) {
             user.setClassRoom(classRoomRepository.findById(req.classRoom()));
         }
+        user.setRoles(UserRole.valueOf(req.roles().toUpperCase()));
         user.setPassword(BcryptUtil.bcryptHash(req.password()));
         userRepository.persist(user);
         Log.info("successfully created? "+user);

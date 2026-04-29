@@ -16,6 +16,7 @@ public class User extends Auditable{
     private String regnumber;
     private String gender;
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private UserRole roles;
     private String password;
     @ManyToOne(fetch = FetchType.LAZY)

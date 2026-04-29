@@ -4,7 +4,7 @@ import org.ichwan.util.AnswerType;
 
 public record QuestionRequest(
         String question,
-        AnswerType options,
+        String options,
         Long classRoom,
         Long category
 ) {}
