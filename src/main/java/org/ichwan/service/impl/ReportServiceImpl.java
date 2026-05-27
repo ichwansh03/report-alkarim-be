@@ -95,6 +95,7 @@ public class ReportServiceImpl implements ReportService {
         return mapper.map(report, ReportResponse.class);
     }
 
+    @CacheInvalidate(cacheName = "reports")
     @Transactional
     @Override
     public ReportResponse update(ReportRequest req, Long id) {

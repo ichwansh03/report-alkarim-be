@@ -39,6 +39,7 @@ public class UserServiceImpl implements UserService {
     @Inject
     private MapperConfig mapper;
 
+    @CacheInvalidate(cacheName = "usersByRoles")
     @Transactional
     @Override
     public UserResponse update(UserRequest req, Long id) {

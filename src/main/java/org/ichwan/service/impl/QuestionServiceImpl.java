@@ -93,6 +93,7 @@ public class QuestionServiceImpl implements QuestionService {
         return new PageResponse<>(data, page, size, totalItems, totalPages);
     }
 
+    @CacheInvalidate(cacheName = "questions")
     @Transactional
     @Override
     public QuestionResponse create(QuestionRequest req) {

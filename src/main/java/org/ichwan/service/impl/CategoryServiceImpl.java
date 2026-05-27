@@ -23,6 +23,7 @@ public class CategoryServiceImpl{
         return repository.listAll();
     }
 
+    @CacheInvalidate(cacheName = "allCategories")
     @Transactional
     public void createCategory(String name) {
         boolean exists = repository.find("name", name).firstResultOptional().isPresent();

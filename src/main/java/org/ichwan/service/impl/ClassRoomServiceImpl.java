@@ -81,6 +81,7 @@ public class ClassRoomServiceImpl implements ClassRoomService {
         return mapper.map(room, ClassRoomResponse.class);
     }
 
+    @CacheInvalidate(cacheName = "classrooms")
     @Transactional
     @Override
     public ClassRoomResponse update(ClassRoomRequest req, Long id) {
